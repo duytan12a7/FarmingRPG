@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,10 +41,8 @@ public class AnimationOverrides : MonoBehaviour
                 {
                     string key = GenerateCharacterAttributeKey(attribute, animationType);
 
-                    // T?m ki?m trong t? ?i?n theo kh?a ?? l?y animation thay th?
                     if (animationTypeByCompositeKey.TryGetValue(key, out SO_AnimationType swapAnimationType))
                     {
-                        // Th?m c?p (clip g?c - clip thay th?) v?o danh s?ch ghi ??
                         overrideClips.Add(new KeyValuePair<AnimationClip, AnimationClip>(originalClip, swapAnimationType.animationClip));
                     }
                 }

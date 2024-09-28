@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class TimeManager : SingletonMonobehaviour<TimeManager>
 {
+    private const int DaysInSeason = 30;
+    private const int HoursInDay = 24;
+    private const int MinutesInHour = 60;
+    private const int SecondsInMinute = 60;
+    private const int SeasonsInYear = 4;
+    private readonly string[] DaysOfWeek = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
     private int gameYear = 1;
-    private Season gameSeason = Season.spring;
+    private Season gameSeason = Season.Spring;
     private int gameDay = 1;
     private int gameHour = 6;
     private int gameMinute = 30;
     private int gameSecond = 0;
     private string gameDayOfWeek = "Mon";
-    private bool gameClockPaused = false;
+    private readonly bool gameClockPaused = false;
     private float gameTick = 0f;
 
-    private void Start() 
+    private void Start()
     {
         EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        
     }
 
-    private void Update() 
+    private void Update()
     {
-        if(!gameClockPaused)
+        if (!gameClockPaused)
         {
             GameTick();
-
         }
     }
 
@@ -33,53 +38,39 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>
     {
         gameTick += Time.deltaTime;
 
-        if(gameTick >= Settings.secondsPerGameSecond)
+        if (gameTick >= Settings.secondsPerGameSecond)
         {
             gameTick -= Settings.secondsPerGameSecond;
-
             UpdateGameSecond();
         }
     }
-
     private void UpdateGameSecond()
     {
         gameSecond++;
-
-        if(gameSecond > 59)
+        if (gameSecond >= SecondsInMinute)
         {
             gameSecond = 0;
             gameMinute++;
 
-            if(gameMinute > 59)
+            if (gameMinute >= MinutesInHour)
             {
                 gameMinute = 0;
                 gameHour++;
 
-                if(gameHour > 23)
+                if (gameHour >= HoursInDay)
                 {
                     gameHour = 0;
                     gameDay++;
 
-                    if(gameDay > 30)
+                    if (gameDay > DaysInSeason)
                     {
                         gameDay = 1;
-                        int gs = (int)gameSeason;
-                        gs++;
+                        gameSeason++;
 
-                        gameSeason = (Season)gs;
-                        if(gs > 3)
+                        if ((int)gameSeason >= SeasonsInYear)
                         {
-                            gs = 0;
-                            gameSeason = (Season)gs;
-
+                            gameSeason = 0;
                             gameYear++;
-
-                            // testing REMOVE LATER
-                            if(gameYear > 9999)
-                            {
-                                gameYear = 1;
-                            }
-
                             EventHandler.CallAdvanceGameYearEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
                         }
 
@@ -94,65 +85,33 @@ public class TimeManager : SingletonMonobehaviour<TimeManager>
             }
 
             EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-            //Debug.LogWarning("Game Year: " + gameYear + "   Game Season: " + gameSeason + "     Game Day" + gameDay +
-            //"   Day of the Week: " + gameDayOfWeek + "     Hour: " + gameHour + "  Minute: " + gameMinute + "   Second: " + gameSecond);
-
         }
-        // Call to advance second if necessary
-
     }
+
 
     private string GetDayOfWeek()
     {
-        int totalDays = (((int)gameSeason) * 30) + gameDay;
-        int dayOfWeek = totalDays % 7;
-
-        switch(dayOfWeek)
-        {
-            case 1:
-                return "Mon";
-            case 2:
-                return "Tue";
-            case 3:
-                return "Wed";
-            case 4:
-                return "Thu";
-            case 5:
-                return "Fri";
-            case 6:
-                return "Sat";
-            case 0:
-                return "Sun";
-            
-            default:
-                return "";
-
-        }
+        int totalDays = ((int)gameSeason * DaysInSeason) + gameDay;
+        return DaysOfWeek[totalDays % 7];
     }
 
-    /// <summary>
-    ///  Test game time adavncement TODO REMOVE
-    /// </summary>
+    // Test game time advancement (Advance by 60 seconds) TODO REMOVE
     public void TestAdvanceGameTime()
     {
-        for(int i = 0; i < 60; i++)
-        {
-            UpdateGameSecond();
-        }
-
+        AdvanceTimeBySeconds(60);
     }
 
-    /// <summary>
-    ///  Test game time adavncement TODO REMOVE
-    /// </summary>
+    // Test game day advancement (Advance by 1 day) TODO REMOVE
     public void TestAdvanceGameDay()
     {
-        for(int i = 0; i < 86400; i++)
+        AdvanceTimeBySeconds(86400);
+    }
+
+    private void AdvanceTimeBySeconds(int totalSeconds)
+    {
+        for (int i = 0; i < totalSeconds; i++)
         {
             UpdateGameSecond();
         }
-
     }
-
-
 }

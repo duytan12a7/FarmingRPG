@@ -1,83 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class ItemNudge : MonoBehaviour
 {
-    private WaitForSeconds pause;
     private bool isAnimating = false;
 
-    private void Awake() 
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        pause = new WaitForSeconds(0.04f);
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision) 
-    {
-        if(isAnimating == false)
+        if (!isAnimating)
         {
-            if(gameObject.transform.position .x < collision.transform.position.x)
-            {
-                StartCoroutine(RotateAntiClock());
-            }
+            if (gameObject.transform.position.x < collision.transform.position.x)
+                RotateAntiClock();
             else
-            {
-                StartCoroutine(RotateClock());
-
-            }
+                RotateClock();
         }
-        
     }
 
-    IEnumerator RotateAntiClock()
+    private void RotateAntiClock()
     {
         isAnimating = true;
+        Transform target = gameObject.transform.GetChild(0);
 
-        for(int i = 0; i < 4; i++)
-        {
-            gameObject.transform.GetChild(0).Rotate(0f, 0f, 2f);
-
-            yield return pause;
-        }
-
-        for(int i = 0; i < 5; i++)
-        {
-            gameObject.transform.GetChild(0).Rotate(0f, 0f, -2f);
-            
-            yield return pause;
-        } 
-
-        gameObject.transform.GetChild(0).Rotate(0f, 0f, 2f);
-
-        yield return pause;
-
-        isAnimating = false;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(target.DORotate(new Vector3(0, 0, 8), 0.16f).SetEase(Ease.Linear))
+                .Append(target.DORotate(new Vector3(0, 0, -10), 0.2f).SetEase(Ease.Linear))
+                .Append(target.DORotate(new Vector3(0, 0, 2), 0.04f).SetEase(Ease.Linear))
+                .OnComplete(() => isAnimating = false);
     }
 
-    IEnumerator RotateClock()
+    private void RotateClock()
     {
         isAnimating = true;
+        Transform target = gameObject.transform.GetChild(0);
 
-        for(int i = 0; i < 4; i++)
-        {
-            gameObject.transform.GetChild(0).Rotate(0f, 0f, -2f);
-
-            yield return pause;
-        }
-
-        for(int i = 0; i < 5; i++)
-        {
-            gameObject.transform.GetChild(0).Rotate(0f, 0f, 2f);
-            
-            yield return pause;
-        } 
-
-        gameObject.transform.GetChild(0).Rotate(0f, 0f, -2f);
-
-        yield return pause;
-
-        isAnimating = false;
-        
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(target.DORotate(new Vector3(0, 0, -8), 0.16f).SetEase(Ease.Linear))
+                .Append(target.DORotate(new Vector3(0, 0, 10), 0.2f).SetEase(Ease.Linear))
+                .Append(target.DORotate(new Vector3(0, 0, -2), 0.04f).SetEase(Ease.Linear))
+                .OnComplete(() => isAnimating = false);
     }
 }

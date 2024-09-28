@@ -1,65 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
- 
+using DG.Tweening;
+
 [RequireComponent(typeof(SpriteRenderer))]
 public class ObscuringItemFader : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
 
-    private void Awake() {
-
-        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-
-    }
-
-    public void FadeOut()
+    private void Awake()
     {
-        StartCoroutine(FadeOutRoutine());
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void FadeIn()
+    public void FadeOut(float targetAlpha = -1f, float duration = -1f)
     {
-        StartCoroutine(FadeInRoutine());
+        if (targetAlpha < 0f)
+            targetAlpha = Settings.targetAlpha;
 
+        if (duration < 0f)
+            duration = Settings.fadeOutSeconds;
+
+        spriteRenderer.DOFade(targetAlpha, duration);
     }
 
-    private IEnumerator FadeOutRoutine()
+    public void FadeIn(float duration = -1f)
     {
-        
-        float currentAlpha = spriteRenderer.color.a;
-        float distance = currentAlpha -= Settings.targetAlpha;
-        
-        while(currentAlpha - Settings.targetAlpha > 0.01f)
-        {
-            currentAlpha = currentAlpha - distance / Settings.fadeOutSec * Time.deltaTime;
-            spriteRenderer.color = new Color(1f, 1f, 1f, currentAlpha);
-            yield return null;
+        if (duration < 0f)
+            duration = Settings.fadeInSeconds;
 
-        }
-
-        spriteRenderer.color = new Color(1f, 1f, 1f, Settings.targetAlpha);
-
+        spriteRenderer.DOFade(1f, duration);
     }
-
-    private IEnumerator FadeInRoutine()
-    {
-        
-        float currentAlpha = spriteRenderer.color.a;
-        float distance = 1f - currentAlpha; 
-        
-        while(1f - currentAlpha > 0.01f)
-        {
-            currentAlpha = currentAlpha + distance / Settings.fadeInSec * Time.deltaTime;
-            spriteRenderer.color = new Color(1f, 1f, 1f, currentAlpha);
-            yield return null;
-
-        }
-
-        spriteRenderer.color = new Color(1f, 1f, 1f, 1f);
-        
-    }
-
-
 }
