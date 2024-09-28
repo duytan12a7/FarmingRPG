@@ -41,7 +41,7 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
     }
 
     // Instantiates a single item in the scene at a given position
-    public void InstantiateSceneItem(int itemCode, Vector3 itemPosition)
+    public void InstantiateSceneItems(int itemCode, Vector3 itemPosition)
     {
         GameObject itemGameObject = Instantiate(itemPrefab, itemPosition, Quaternion.identity, parentItem);
         itemGameObject.GetComponent<Item>().Init(itemCode);
@@ -63,35 +63,35 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
     // Register to save system and subscribe to scene load event
     private void OnEnable()
     {
-        ISaveableRegister();
+        IRegisterSaveable();
         EventHandler.AfterSceneLoadEvent += AfterSceneLoad;
     }
 
     // Deregister from save system and unsubscribe from scene load event
     private void OnDisable()
     {
-        ISaveableDeregister();
+        IDeregisterSaveable();
         EventHandler.AfterSceneLoadEvent -= AfterSceneLoad;
     }
 
-    public void ISaveableRegister()
+    public void IRegisterSaveable()
     {
         SaveLoadManager.Instance.iSaveableObjectList.Add(this);
     }
 
-    public void ISaveableDeregister()
+    public void IDeregisterSaveable()
     {
         SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
     }
 
     // Save the current state of the scene items
-    public void ISaveableStoreScene(string sceneName)
+    public void IStoreSceneData(string sceneName)
     {
         // Clear previous save data for this scene
         GameObjectSave.sceneData.Remove(sceneName);
 
         // Create a new list to store the current items in the scene
-        List<SceneItem> sceneItemList = new();
+        List<SceneItem> listSceneItem = new();
         foreach (var item in FindObjectsOfType<Item>())
         {
             SceneItem sceneItem = new()
@@ -100,34 +100,27 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
                 position = new Vector3Serializable(item.transform.position),
                 itemName = item.name
             };
-            sceneItemList.Add(sceneItem);
+            listSceneItem.Add(sceneItem);
         }
 
         // Create a new SceneSave instance and store the list of items
-        SceneSave sceneSave = new()
-        {
-            listSceneItemDictionary = new Dictionary<string, List<SceneItem>>()
-            {
-                { "sceneItemList", sceneItemList }
-            }
-        };
+        SceneSave sceneSave = new();
+        sceneSave.sceneItems = listSceneItem;
 
         // Add scene save to GameObjectSave
         GameObjectSave.sceneData[sceneName] = sceneSave;
     }
 
     // Restore the saved state of the scene items
-    public void ISaveableRestoreScene(string sceneName)
+    public void IRestoreSceneData(string sceneName)
     {
-        // Check if there is saved data for the given scene
-        if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
+        if(GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
         {
-            if (sceneSave.listSceneItemDictionary == null) return;
-            if (sceneSave.listSceneItemDictionary.TryGetValue("sceneItemList", out List<SceneItem> sceneItemList))
+            if(sceneSave.sceneItems != null)
             {
-                // Destroy current items and instantiate saved ones
                 DestroySceneItems();
-                InstantiateSceneItems(sceneItemList);
+
+                InstantiateSceneItems(sceneSave.sceneItems);
             }
         }
     }
