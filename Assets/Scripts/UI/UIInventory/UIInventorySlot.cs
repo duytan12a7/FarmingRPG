@@ -30,12 +30,12 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void OnEnable()
     {
-        EventHandler.AfterSceneLoadedEvent += SceneLoaded;
+        EventHandler.AfterSceneLoadEvent += SceneLoaded;
     }
 
     private void OnDisable()
     {
-        EventHandler.AfterSceneLoadedEvent -= SceneLoaded;
+        EventHandler.AfterSceneLoadEvent -= SceneLoaded;
     }
 
     private void Start()

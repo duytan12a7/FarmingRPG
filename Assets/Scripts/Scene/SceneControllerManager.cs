@@ -19,6 +19,10 @@ public class SceneControllerManager : SingletonMonobehaviour<SceneControllerMana
         faderCanvasGroup.alpha = 1f;
 
         yield return LoadSceneAndActivate(startingSceneName.ToString());
+
+        // Restore new scene data
+        SaveLoadManager.Instance.RestoreCurrentSceneData();
+
         StartCoroutine(Fade(0f));
     }
 
@@ -44,14 +48,24 @@ public class SceneControllerManager : SingletonMonobehaviour<SceneControllerMana
     // Coroutine to fade out and switch scenes
     private IEnumerator FadeAndSwitchScenes(string sceneName, Vector3 spawnPosition)
     {
+        EventHandler.CallBeforeSceneUnloadFadeOutEvent();
+
         yield return StartCoroutine(Fade(1f));
+
+        // Store scene data
+        SaveLoadManager.Instance.StoreCurrentSceneData();
 
         PlayerController.Instance.gameObject.transform.position = spawnPosition;
 
         yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
-        yield return LoadSceneAndActivate(sceneName); 
+        yield return LoadSceneAndActivate(sceneName);
+
+        // Restore new scene data
+        SaveLoadManager.Instance.RestoreCurrentSceneData();
 
         yield return StartCoroutine(Fade(0f));
+
+        EventHandler.CallAfterSceneLoadFadeInEvent();
     }
 
     // Coroutine to load and activate a new scene
