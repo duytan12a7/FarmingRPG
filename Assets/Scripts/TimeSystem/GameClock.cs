@@ -17,7 +17,7 @@ public class GameClock : MonoBehaviour
 
     private void OnDisable() 
     {
-        EventHandler.AdvanceGameMinuteEvent += UpdateGameTime;
+        EventHandler.AdvanceGameMinuteEvent -= UpdateGameTime;
         
     }
 
@@ -25,12 +25,12 @@ public class GameClock : MonoBehaviour
     {
         // Update Time
 
-        gameMinute = gameMinute - (gameMinute % 10);
+        gameMinute -= (gameMinute % 10);
 
-        string ampm = "";
         string minute;
 
-        if(gameHour >= 12)
+        string ampm;
+        if (gameHour >= 12)
         {
             ampm = " pm";
         }
@@ -40,7 +40,7 @@ public class GameClock : MonoBehaviour
 
         }
 
-        if(gameHour >= 13)
+        if (gameHour >= 13)
         {
             gameHour -= 12;
         }
@@ -54,7 +54,7 @@ public class GameClock : MonoBehaviour
             minute = gameMinute.ToString();
         }
 
-        string time = gameHour.ToString() + " " + minute + ampm;
+        string time = gameHour.ToString() + " : " + minute + ampm;
 
         timeText.SetText(time);
         dateText.SetText(gameDayOfWeek + ". " + gameDay.ToString());

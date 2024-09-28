@@ -120,10 +120,10 @@ public enum SceneName
 
 public enum Season
 {
-    spring,
-    summer,
-    autumn,
-    winter,
+    Spring,
+    Summer,
+    Autumn,
+    Winter,
     
 
 }

@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TriggerObscuringItemFader : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        // get the gameobject we have collided with , and then get all teh obscuring componets on it children and then trigger them
 
         ObscuringItemFader[] obscuringItemFaders = collision.GetComponentsInChildren<ObscuringItemFader>();    
 

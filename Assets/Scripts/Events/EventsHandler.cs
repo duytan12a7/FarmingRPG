@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 
-public delegate void MovementDelegate(float inputX, float inputY, bool isWalking, bool isRunning, bool isIdle, 
+public delegate void MovementDelegate(float inputX, float inputY, bool isWalking, bool isRunning, bool isIdle,
 bool isCarrying, ToolEffect toolEffect, bool isUsingToolRight, bool isUsingToolLeft, bool isUsingToolUp, bool isUsingToolDown,
 bool isLiftingToolRight, bool isLiftingToolLeft, bool isLiftingToolUp, bool isLiftingToolDown,
 bool isPickingRight, bool isPickingLeft, bool isPickingUp, bool isPickingDown,
@@ -17,10 +16,7 @@ public static class EventHandler
 
     public static void CallInventoryUpdatedEvent(InventoryLocation inventoryLocation, List<InventoryItem> inventoryList)
     {
-        if(InventoryUpdatedEvent != null)
-        {
-            InventoryUpdatedEvent(inventoryLocation, inventoryList);
-        }
+        InventoryUpdatedEvent?.Invoke(inventoryLocation, inventoryList);
     }
 
     // Movement Event
@@ -28,24 +24,19 @@ public static class EventHandler
 
 
     // Movement Event Call For Publishers
-    public static void CallMovementEvent(float inputX, float inputY, bool isWalking, bool isRunning, bool isIdle, 
+    public static void CallMovementEvent(float inputX, float inputY, bool isWalking, bool isRunning, bool isIdle,
     bool isCarrying, ToolEffect toolEffect, bool isUsingToolRight, bool isUsingToolLeft, bool isUsingToolUp, bool isUsingToolDown,
     bool isLiftingToolRight, bool isLiftingToolLeft, bool isLiftingToolUp, bool isLiftingToolDown,
     bool isPickingRight, bool isPickingLeft, bool isPickingUp, bool isPickingDown,
     bool isSwingingToolRight, bool isSwingingToolLeft, bool isSwingingToolUp, bool isSwingingToolDown,
     bool idleUp, bool idleDown, bool idleRight, bool idleLeft)
     {
-        if(MovementEvent != null)
-        {
-            MovementEvent(inputX, inputY, isWalking, isRunning, isIdle, 
-             isCarrying, toolEffect, isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
-             isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
-             isPickingRight,  isPickingLeft, isPickingUp, isPickingDown,
-             isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown,
-             idleUp, idleDown, idleRight, idleLeft);
-            
-        }
-
+        MovementEvent?.Invoke(inputX, inputY, isWalking, isRunning, isIdle,
+            isCarrying, toolEffect, isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown,
+            isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown,
+            isPickingRight, isPickingLeft, isPickingUp, isPickingDown,
+            isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown,
+            idleUp, idleDown, idleRight, idleLeft);
     }
 
     // Time Events
@@ -53,61 +44,42 @@ public static class EventHandler
     // Advance game minute
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameMinuteEvent;
 
-    public static void CallAdvanceGameMinuteEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute ,int gameSecond)
+    public static void CallAdvanceGameMinuteEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if(AdvanceGameMinuteEvent != null)
-        {
-            AdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
-
+        AdvanceGameMinuteEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
     }
 
     // Advance game hour
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameHourEvent;
 
-    public static void CallAdvanceGameHourEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute ,int gameSecond)
+    public static void CallAdvanceGameHourEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if(AdvanceGameHourEvent != null)
-        {
-            AdvanceGameHourEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
-
+        AdvanceGameHourEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
     }
 
     // Advance game day
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameDayEvent;
 
-    public static void CallAdvanceGameDayEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute ,int gameSecond)
+    public static void CallAdvanceGameDayEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if(AdvanceGameDayEvent != null)
-        {
-            AdvanceGameDayEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
+        AdvanceGameDayEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
 
     }
 
     // Advance game season
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameSeasonEvent;
 
-    public static void CallAdvanceGameSeasonEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute ,int gameSecond)
+    public static void CallAdvanceGameSeasonEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if(AdvanceGameSeasonEvent != null)
-        {
-            AdvanceGameSeasonEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
-
+        AdvanceGameSeasonEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
     }
 
     // Advance game year
     public static event Action<int, Season, int, string, int, int, int> AdvanceGameYearEvent;
 
-    public static void CallAdvanceGameYearEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute ,int gameSecond)
+    public static void CallAdvanceGameYearEvent(int gameYear, Season gameSeason, int gameDay, string gameDayOfWeek, int gameHour, int gameMinute, int gameSecond)
     {
-        if(AdvanceGameYearEvent != null)
-        {
-            AdvanceGameYearEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-        }
-
+        AdvanceGameYearEvent?.Invoke(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
     }
 
     // Scene Load Events - in the order they happen
@@ -117,10 +89,7 @@ public static class EventHandler
 
     public static void CallBeforeSceneUnloadFadeOutEvent()
     {
-        if(BeforeSceneUnloadFadeOutEvent != null)
-        {
-            BeforeSceneUnloadFadeOutEvent();
-        }
+        BeforeSceneUnloadFadeOutEvent?.Invoke();
     }
 
     // Before Scene Unload Event
@@ -128,10 +97,7 @@ public static class EventHandler
 
     public static void CallBeforeSceneUnloadEvent()
     {
-        if(BeforeSceneUnloadEvent != null)
-        {
-            BeforeSceneUnloadEvent();
-        }
+        BeforeSceneUnloadEvent?.Invoke();
     }
 
     // After Scene Loaded Event
@@ -139,10 +105,7 @@ public static class EventHandler
 
     public static void CallAfterSceneLoadEvent()
     {
-        if(AfterSceneLoadedEvent != null)
-        {
-            AfterSceneLoadedEvent();
-        }
+        AfterSceneLoadedEvent?.Invoke();
     }
 
     // After Scene Load Fade In Event
@@ -150,10 +113,7 @@ public static class EventHandler
 
     public static void CallAfterSceneLoadFadeInEvent()
     {
-        if(AfterSceneLoadFadeInEvent != null)
-        {
-            AfterSceneLoadFadeInEvent();
-        }
+        AfterSceneLoadFadeInEvent?.Invoke();
     }
 
 
