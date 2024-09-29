@@ -223,11 +223,11 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // Show carried item or clear it based on item's properties
         if (itemDetails.canBeCarried)
         {
-            PlayerController.Instance.PlayerCarriedItemHandler.ShowCarriedItem(itemDetails.itemCode);
+            PlayerController.Instance.PlayerAnimation.ShowCarriedItem(itemDetails.itemCode);
         }
         else
         {
-            PlayerController.Instance.PlayerCarriedItemHandler.ClearCarriedItem();
+            PlayerController.Instance.PlayerAnimation.ClearCarriedItem();
         }
     }
 
@@ -240,7 +240,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         isSelected = false;
 
         InventoryManager.Instance.ClearSelectedInventoryItem(InventoryLocation.player);
-        PlayerController.Instance.PlayerCarriedItemHandler.ClearCarriedItem();
+        PlayerController.Instance.PlayerAnimation.ClearCarriedItem();
     }
 
     public void SceneLoaded()

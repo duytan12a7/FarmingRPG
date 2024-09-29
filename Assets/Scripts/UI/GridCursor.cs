@@ -78,23 +78,99 @@ public class GridCursor : MonoBehaviour
         }
 
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cursorGridPosition.x, cursorGridPosition.y);
-        if (gridPropertyDetails == null || !IsCursorValidForItem(itemDetails.itemType, gridPropertyDetails))
+        if (gridPropertyDetails == null)
         {
             SetCursorToInvalid();
             return;
         }
+        switch (itemDetails.itemType)
+        {
+            case ItemType.Seed:
+                if (!IsCursorValidForSeed(gridPropertyDetails))
+                {
+                    SetCursorToInvalid();
+                    return;
+                }
+                break;
 
+            case ItemType.Commodity:
+                if (!IsCursorValidForCommodity(gridPropertyDetails))
+                {
+                    SetCursorToInvalid();
+                    return;
+                }
+                break;
+
+            case ItemType.Hoeing_tool:
+                if (!IsCursorValidForTool(gridPropertyDetails, itemDetails))
+                {
+                    SetCursorToInvalid();
+                    return;
+                }
+                break;
+
+            case ItemType.none:
+                break;
+            case ItemType.count:
+                break;
+            default:
+                break;
+        }
         SetCursorToValid();
     }
 
-    private bool IsCursorValidForItem(ItemType itemType, GridPropertyDetails gridPropertyDetails)
+    private bool IsCursorValidForSeed(GridPropertyDetails gridPropertyDetails)
     {
-        // Ch? ki?m tra m?t ?i?u ki?n cho c? Seed v? Commodity
-        return itemType switch
+        return gridPropertyDetails.canDropItem;
+    }
+
+    private bool IsCursorValidForCommodity(GridPropertyDetails gridPropertyDetails)
+    {
+        return gridPropertyDetails.canDropItem;
+    }
+
+    private bool IsCursorValidForTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
+    {
+        switch (itemDetails.itemType)
         {
-            ItemType.Seed or ItemType.Commodity => gridPropertyDetails.canDropItem,
-            _ => true
-        };
+            case ItemType.Hoeing_tool:
+                if (gridPropertyDetails.isDiggable && gridPropertyDetails.daysSinceDug == -1)
+                {
+                    Vector3 cursorWorldPosition = new(GetWorldPositionForCursor().x + 0.5f, GetWorldPositionForCursor().y + 0.5f, 0f);
+
+                    List<Item> items = new();
+
+                    HelperMethods.GetComponentsAtBoxLocation<Item>(out items, cursorWorldPosition, Settings.cursorSize, 0f);
+
+                    bool foundReapable = false;
+
+                    foreach (Item item in items)
+                    {
+                        if (InventoryManager.Instance.GetItemDetails(item.ItemCode).itemType == ItemType.Reapable_scenery)
+                        {
+                            foundReapable = true;
+                            break;
+                        }
+                    }
+
+                    if (foundReapable)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                }
+                else
+                {
+                    return false;
+                }
+            default:
+                break;
+        }
+        return false;
     }
 
     private void SetCursorToValid()
@@ -125,6 +201,7 @@ public class GridCursor : MonoBehaviour
     {
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(
             new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
+
         return grid.WorldToCell(worldPos);
     }
 
@@ -137,6 +214,12 @@ public class GridCursor : MonoBehaviour
     {
         Vector3 gridWorldPosition = grid.CellToWorld(gridPosition);
         Vector2 gridScreenPosition = mainCamera.WorldToScreenPoint(gridWorldPosition);
+
         return RectTransformUtility.PixelAdjustPoint(gridScreenPosition, cursorRectTransform, canvas);
+    }
+
+    private Vector3 GetWorldPositionForCursor()
+    {
+        return grid.CellToWorld(GetGridPositionForCursor());
     }
 }

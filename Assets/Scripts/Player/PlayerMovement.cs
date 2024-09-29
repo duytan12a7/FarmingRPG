@@ -47,21 +47,6 @@ public class PlayerMovement : MonoBehaviour
         playerController = GetComponent<PlayerController>();
     }
 
-    private void Update()
-    {
-        if (!PlayerInputIsDisabled)
-        {
-
-            playerController.PlayerAnimation.ResetAnimationTriggers();
-
-            HandlePlayerInput();
-
-            playerController.PlayerAnimation.CallMovementEvent();
-        }
-
-        PlayerTestInput();
-    }
-
     private void FixedUpdate()
     {
         MovePlayer();
@@ -73,23 +58,11 @@ public class PlayerMovement : MonoBehaviour
         rigidBody.MovePosition(rigidBody.position + move);
     }
 
-    private void HandlePlayerInput()
+    public void UpdatePlayerState(float xInput, float yInput)
     {
-        yInput = Input.GetAxisRaw("Vertical");
-        xInput = Input.GetAxisRaw("Horizontal");
+        this.xInput = xInput;
+        this.yInput = yInput;
 
-        if (yInput != 0 && xInput != 0)
-        {
-            xInput *= 0.71f;
-            yInput *= 0.71f;
-        }
-
-        UpdatePlayerState();
-        UpdatePlayerDirection();
-    }
-
-    private void UpdatePlayerState()
-    {
         if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
         {
             currentState = PlayerState.Walking;
@@ -107,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void UpdatePlayerDirection()
+    public void UpdatePlayerDirection(float xInput, float yInput)
     {
         if (xInput < 0) playerDirection = Direction.left;
         else if (xInput > 0) playerDirection = Direction.right;
@@ -137,27 +110,10 @@ public class PlayerMovement : MonoBehaviour
     public void DisablePlayerInputAndResetMovement()
     {
         DisablePlayerInput();
-
         playerController.PlayerAnimation.CallMovementEvent();
     }
 
     public void EnablePlayerInput() => PlayerInputIsDisabled = false;
 
     public void DisablePlayerInput() => PlayerInputIsDisabled = true;
-
-    private void PlayerTestInput()
-    {
-        if (Input.GetKey(KeyCode.T))
-        {
-            TimeManager.Instance.TestAdvanceGameTime();
-        }
-        if (Input.GetKey(KeyCode.G))
-        {
-            TimeManager.Instance.TestAdvanceGameDay();
-        }
-        if (Input.GetKey(KeyCode.L))
-        {
-            SceneControllerManager.Instance.FadeAndLoadScene(SceneName.Scene1_Farm.ToString(), transform.position);
-        }
-    }
 }
