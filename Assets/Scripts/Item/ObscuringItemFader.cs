@@ -19,6 +19,7 @@ public class ObscuringItemFader : MonoBehaviour
         if (duration < 0f)
             duration = Settings.fadeOutSeconds;
 
+        if (gameObject == null) return;
         spriteRenderer.DOFade(targetAlpha, duration);
     }
 
@@ -27,6 +28,7 @@ public class ObscuringItemFader : MonoBehaviour
         if (duration < 0f)
             duration = Settings.fadeInSeconds;
 
+        if (gameObject == null) return;
         spriteRenderer.DOFade(1f, duration);
     }
 }

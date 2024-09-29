@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private PlayerController playerController;
+    private PlayerController playerCtrl;
 
     private enum PlayerState
     {
@@ -20,9 +20,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rigidBody;
     private Camera mainCamera;
-
-    private Direction playerDirection;
-    public Direction PlayerDirection => playerDirection;
 
     private float xInput;
     public float XInput() => xInput;
@@ -44,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
-        playerController = GetComponent<PlayerController>();
+        playerCtrl = GetComponent<PlayerController>();
     }
 
     private void FixedUpdate()
@@ -82,10 +79,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void UpdatePlayerDirection(float xInput, float yInput)
     {
-        if (xInput < 0) playerDirection = Direction.left;
-        else if (xInput > 0) playerDirection = Direction.right;
-        else if (yInput < 0) playerDirection = Direction.down;
-        else if (yInput > 0) playerDirection = Direction.up;
+        if (xInput < 0) playerCtrl.PlayerInput.playerDirection = Direction.left;
+        else if (xInput > 0) playerCtrl.PlayerInput.playerDirection = Direction.right;
+        else if (yInput < 0) playerCtrl.PlayerInput.playerDirection = Direction.down;
+        else if (yInput > 0) playerCtrl.PlayerInput.playerDirection = Direction.up;
     }
 
     public Vector3 GetPlayerViewportPosition() => mainCamera.WorldToViewportPoint(transform.position);
@@ -110,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     public void DisablePlayerInputAndResetMovement()
     {
         DisablePlayerInput();
-        playerController.PlayerAnimation.CallMovementEvent();
+        playerCtrl.PlayerAnimation.CallMovementEvent();
     }
 
     public void EnablePlayerInput() => PlayerInputIsDisabled = false;

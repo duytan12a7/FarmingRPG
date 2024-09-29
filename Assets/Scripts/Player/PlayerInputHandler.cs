@@ -8,11 +8,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private GridCursor gridCursor;
 
-    private void Awake()
+    private Cursor cursor;
+
+    public Direction playerDirection;
+
+    private void Start()
     {
         playerCtrl = GetComponent<PlayerController>();
 
         gridCursor = FindObjectOfType<GridCursor>();
+
+        cursor = FindObjectOfType<Cursor>();
     }
 
     private void Update()
@@ -56,7 +62,7 @@ public class PlayerInputHandler : MonoBehaviour
         Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
         Vector3Int playerGridPosition = gridCursor.GetGridPositionForPlayer();
 
-        if (gridCursor.CursorIsEnabled)
+        if (gridCursor.CursorIsEnabled || cursor.CursorIsEnabled)
         {
             ProcessPlayerClickInput(cursorGridPosition, playerGridPosition);
         }
@@ -72,7 +78,7 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (itemDetails == null) return;
 
-        if (Input.GetMouseButtonDown(0) && gridCursor.CursorPositionIsValid)
+        if (Input.GetMouseButtonDown(0))
         {
             HandleItemInteraction(itemDetails, gridPropertyDetails, playerDirection);
         }
@@ -84,7 +90,7 @@ public class PlayerInputHandler : MonoBehaviour
         {
             case ItemType.Seed:
             case ItemType.Commodity:
-                if (itemDetails.canBeDropped)
+                if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid)
                 {
                     EventHandler.CallDropSelectedItemEvent();
                 }
@@ -92,6 +98,7 @@ public class PlayerInputHandler : MonoBehaviour
 
             case ItemType.Hoeing_tool:
             case ItemType.Watering_tool:
+            case ItemType.Reaping_tool:
                 ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                 break;
         }
@@ -109,6 +116,46 @@ public class PlayerInputHandler : MonoBehaviour
                 if (gridCursor.CursorPositionIsValid)
                     playerCtrl.PlayerAnimation.WaterGroundAtCursor(gridPropertyDetails, playerDirection);
                 break;
+            case ItemType.Reaping_tool:
+                if (cursor.CursorPositionIsValid)
+                {
+                    playerDirection = GetPlayerDirection(cursor.GetWorldPositionForCursor(), playerCtrl.GetPlayerCentrePosition());
+                    playerCtrl.PlayerAnimation.ReapInPlayerDirectionAtCursor(itemDetails, playerDirection);
+                }
+                break;
+        }
+    }
+
+    private Vector3Int GetPlayerDirection(Vector3 cursorPosition, Vector3 playerPosition)
+    {
+        if (
+            cursorPosition.x > playerPosition.x
+            &&
+            cursorPosition.y < (playerPosition.y + cursor.ItemUseRadius / 2f)
+            &&
+            cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
+
+        )
+        {
+            return Vector3Int.right;
+        }
+        else if (
+            cursorPosition.x < playerPosition.x
+            &&
+            cursorPosition.y < (playerPosition.y + cursor.ItemUseRadius / 2f)
+            &&
+            cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
+        )
+        {
+            return Vector3Int.left;
+        }
+        else if (cursorPosition.y > playerPosition.y)
+        {
+            return Vector3Int.up;
+        }
+        else
+        {
+            return Vector3Int.down;
         }
     }
 

@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -7,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class TilemapGridProperties : MonoBehaviour
 {
     private Tilemap tilemap;
-    private Grid grid;
+
     [SerializeField] private SO_GridProperties sO_GridProperties;
     [SerializeField] private GridBoolProperty gridBoolProperty = GridBoolProperty.diggable;
 

@@ -11,6 +11,13 @@ public static class Settings
     public const float gridCellSize = 1f;
     public static Vector2 cursorSize = Vector2.one;
 
+    // Player
+    public static float playerCentreYOffset = 0.875f;
+
+    // Reaping
+    public const int maxCollidersToTestReapSwing = 15;
+    public const int maxTargetComponentsToDestroyReapSwing = 2;
+
     // Player Movement
     public const float DiagonalMovementFactor = 0.71f;
     public const float runningSpeed = 5.333f;
@@ -93,7 +100,7 @@ public static class Settings
         isLiftingToolUp = Animator.StringToHash("isLiftingToolUp");
         isLiftingToolDown = Animator.StringToHash("isLiftingToolDown");
 
-        isSwingingToolRight = Animator.StringToHash("isSwiningToolRight");
+        isSwingingToolRight = Animator.StringToHash("isSwingingToolRight");
         isSwingingToolLeft = Animator.StringToHash("isSwingingToolLeft");
         isSwingingToolUp = Animator.StringToHash("isSwingingToolUp");
         isSwingingToolDown = Animator.StringToHash("isSwingingToolDown");
