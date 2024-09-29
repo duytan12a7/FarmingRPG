@@ -62,33 +62,6 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
-    //private void ProcessPlayerClickInput(Vector3Int cursorGridPosition, Vector3Int playerGridPosition)
-    //{
-    //    playerCtrl.PlayerMovement.ResetMovement();
-
-    //    Vector3Int playerDirection = playerCtrl.PlayerAnimation.GetPlayerClickDirection(cursorGridPosition, playerGridPosition);
-    //    GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cursorGridPosition.x, cursorGridPosition.y);
-    //    ItemDetails itemDetails = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.player);
-
-    //    if (itemDetails == null) return;
-
-    //    if (Input.GetMouseButtonDown(0) && gridCursor.CursorPositionIsValid)
-    //    {
-    //        switch (itemDetails.itemType)
-    //        {
-    //            case ItemType.Seed:
-    //            case ItemType.Commodity:
-    //                if (itemDetails.canBeDropped)
-    //                    EventHandler.CallDropSelectedItemEvent();
-    //                break;
-
-    //            case ItemType.Hoeing_tool:
-    //                ProcessPlayerClickInputTool(gridPropertyDetails, playerDirection);
-    //                break;
-    //        }
-    //    }
-    //}
-
     private void ProcessPlayerClickInput(Vector3Int cursorGridPosition, Vector3Int playerGridPosition)
     {
         playerCtrl.PlayerMovement.ResetMovement();
