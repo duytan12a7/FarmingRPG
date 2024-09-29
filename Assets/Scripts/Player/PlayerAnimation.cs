@@ -38,6 +38,9 @@ public class PlayerAnimation : MonoBehaviour
     private WaitForSeconds useToolAnimationPause;
     private WaitForSeconds afterUseToolAnimationPause;
 
+    private WaitForSeconds liftToolAnimationPause;
+    private WaitForSeconds afterLiftToolAnimationPause;
+
     public bool PlayerToolUseDisabled { get; set; } = false;
 
     private void Awake()
@@ -52,6 +55,9 @@ public class PlayerAnimation : MonoBehaviour
     {
         useToolAnimationPause = new WaitForSeconds(Settings.useToolAnimationPause);
         afterUseToolAnimationPause = new WaitForSeconds(Settings.afterUseToolAnimationPause);
+
+        liftToolAnimationPause = new WaitForSeconds(Settings.liftToolAnimationPause);
+        afterLiftToolAnimationPause = new WaitForSeconds(Settings.afterLiftToolAnimationPause);
     }
 
     public void ResetAnimationTriggers()
@@ -113,10 +119,10 @@ public class PlayerAnimation : MonoBehaviour
 
     public void HoeGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
-        StartCoroutine(HoeGroundAtCursorRoutine(playerDirection, gridPropertyDetails));
+        StartCoroutine(HoeGroundAtCursorRoutine(gridPropertyDetails, playerDirection));
     }
 
-    private IEnumerator HoeGroundAtCursorRoutine(Vector3Int playerDirection, GridPropertyDetails gridPropertyDetails)
+    private IEnumerator HoeGroundAtCursorRoutine(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
         PlayerToolUseDisabled = true;
@@ -141,11 +147,76 @@ public class PlayerAnimation : MonoBehaviour
         PlayerToolUseDisabled = false;
     }
 
+    public void WaterGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(WaterGroundAtCursorRoutine(gridPropertyDetails, playerDirection));
+    }
+
+    private IEnumerator WaterGroundAtCursorRoutine(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
+    {
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
+        PlayerToolUseDisabled = true;
+
+        // Set tool animation to watering can in override aniamtion
+        toolCharacterAttribute.variantType = PartVariantType.wateringCan;
+        characterAttributes.Clear();
+        characterAttributes.Add(toolCharacterAttribute);
+        animationOverrides.ApplyCharacterCustomisation(characterAttributes);
+
+        // TODO if there is water in teh watering can
+        toolEffect = ToolEffect.watering;
+
+        if (playerDirection == Vector3Int.right)
+        {
+            isLiftingToolRight = true;
+        }
+        else if (playerDirection == Vector3Int.left)
+        {
+            isLiftingToolLeft = true;
+        }
+        else if (playerDirection == Vector3Int.up)
+        {
+            isLiftingToolUp = true;
+        }
+        else if (playerDirection == Vector3Int.down)
+        {
+            isLiftingToolDown = true;
+        }
+
+        yield return liftToolAnimationPause;
+
+        // Set Grid Property details for watering ground
+        if (gridPropertyDetails.daysSinceWatered == -1)
+        {
+            gridPropertyDetails.daysSinceWatered = 0;
+        }
+
+        // Set Grid property to watered
+        GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
+
+        // After animation pause
+        yield return afterLiftToolAnimationPause;
+
+        // Allow player input
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
+        PlayerToolUseDisabled = false;
+
+
+    }
+
     private void SetToolUsingFlags(Vector3Int playerDirection)
     {
         isUsingToolRight = playerDirection == Vector3Int.right;
         isUsingToolLeft = playerDirection == Vector3Int.left;
         isUsingToolUp = playerDirection == Vector3Int.up;
         isUsingToolDown = playerDirection == Vector3Int.down;
+    }
+
+    private void SetToolLiftingFlags(Vector3Int playerDirection)
+    {
+        isLiftingToolRight = playerDirection == Vector3Int.right;
+        isLiftingToolLeft = playerDirection == Vector3Int.left;
+        isLiftingToolUp = playerDirection == Vector3Int.up;
+        isLiftingToolDown = playerDirection == Vector3Int.down;
     }
 }
