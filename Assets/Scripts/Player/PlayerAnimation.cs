@@ -133,6 +133,8 @@ public class PlayerAnimation : MonoBehaviour
         gridPropertyDetails.daysSinceDug = gridPropertyDetails.daysSinceDug == -1 ? 0 : gridPropertyDetails.daysSinceDug;
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
+        GridPropertiesManager.Instance.DisplayDugGround(gridPropertyDetails);
+
         yield return afterUseToolAnimationPause;
 
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;

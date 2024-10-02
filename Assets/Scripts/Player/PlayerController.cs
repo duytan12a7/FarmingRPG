@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class PlayerController : SingletonMonobehaviour<PlayerController>
 {
+    public PlayerMovement PlayerMovement { get; private set; }
 
-    private PlayerMovement playerMovement;
-    public PlayerMovement PlayerMovement => playerMovement;
-
-    private PlayerAnimation playerAnimation;
-    public PlayerAnimation PlayerAnimation => playerAnimation;
+    public PlayerAnimation PlayerAnimation { get; private set; }
 
     protected override void Awake() 
     {
         base.Awake();
 
-        playerMovement = GetComponent<PlayerMovement>();
-        playerAnimation = GetComponent<PlayerAnimation>();
-        
+        PlayerMovement = GetComponent<PlayerMovement>();
+        PlayerAnimation = GetComponent<PlayerAnimation>();
     }
 }
