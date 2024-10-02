@@ -8,12 +8,12 @@ public class SwitchConfineBoundingShape : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.AfterSceneLoadedEvent += SwitchBoundingShape;
+        EventHandler.AfterSceneLoadEvent += SwitchBoundingShape;
     }
 
     private void OnDisable()
     {
-        EventHandler.AfterSceneLoadedEvent -= SwitchBoundingShape;
+        EventHandler.AfterSceneLoadEvent -= SwitchBoundingShape;
 
     }
 

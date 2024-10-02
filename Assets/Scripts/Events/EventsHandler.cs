@@ -101,11 +101,11 @@ public static class EventHandler
     }
 
     // After Scene Loaded Event
-    public static event Action AfterSceneLoadedEvent;
+    public static event Action AfterSceneLoadEvent;
 
     public static void CallAfterSceneLoadEvent()
     {
-        AfterSceneLoadedEvent?.Invoke();
+        AfterSceneLoadEvent?.Invoke();
     }
 
     // After Scene Load Fade In Event
