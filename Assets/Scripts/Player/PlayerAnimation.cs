@@ -193,6 +193,7 @@ public class PlayerAnimation : MonoBehaviour
 
         // Set Grid property to watered
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
+        GridPropertiesManager.Instance.DisplayWateredGround(gridPropertyDetails);
 
         // After animation pause
         yield return afterLiftToolAnimationPause;
