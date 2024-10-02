@@ -219,6 +219,8 @@ public class PlayerAnimation : MonoBehaviour
                         itemArray[i].transform.position.y + Settings.gridCellSize / 2f,
                         itemArray[i].transform.position.z);
 
+                    EventHandler.CallHarvestActionEffectEvent(effectPosition, HarvestActionEffect.reaping);
+
                     itemArray[i].gameObject.SetActive(false);
                     //Destroy(itemArray[i].gameObject);
 
