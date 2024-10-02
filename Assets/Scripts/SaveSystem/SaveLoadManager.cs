@@ -20,7 +20,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
         // loop through all ISaveable objects and trigger store scene data for each
         foreach (ISaveable iSaveableObject in iSaveableObjectList)
         {
-            iSaveableObject.ISaveableStoreScene(SceneManager.GetActiveScene().name);
+            iSaveableObject.IStoreSceneData(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -29,7 +29,7 @@ public class SaveLoadManager : SingletonMonobehaviour<SaveLoadManager>
         // loop through all ISaveable objects and trigger restore scene data for each
         foreach (ISaveable iSaveableObject in iSaveableObjectList)
         {
-            iSaveableObject.ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+            iSaveableObject.IRestoreSceneData(SceneManager.GetActiveScene().name);
         }
     }
 }

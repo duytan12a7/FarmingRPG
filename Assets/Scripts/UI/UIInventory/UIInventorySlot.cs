@@ -8,6 +8,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 {
     public Camera mainCamera;
     private Canvas parentCanvas;
+    private GridCursor gridCursor;
     private Transform parentItem;
     private GameObject draggedItem;
 
@@ -26,16 +27,26 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private void Awake()
     {
         parentCanvas = GetComponentInParent<Canvas>();
+        gridCursor = FindObjectOfType<GridCursor>();
+    }
+
+    private void ClearCursors()
+    {
+        gridCursor.DisableCursor();
+
+        gridCursor.SelectedItemType = ItemType.none;
     }
 
     private void OnEnable()
     {
         EventHandler.AfterSceneLoadEvent += SceneLoaded;
+        EventHandler.DropSelectedItemEvent += DropSelectedItemAtMousePosition;
     }
 
     private void OnDisable()
     {
         EventHandler.AfterSceneLoadEvent -= SceneLoaded;
+        EventHandler.DropSelectedItemEvent -= DropSelectedItemAtMousePosition;
     }
 
     private void Start()
@@ -48,23 +59,31 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (itemDetails != null && isSelected)
         {
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
+            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(
+                Input.mousePosition.x,
+                Input.mousePosition.y,
+                -mainCamera.transform.position.z));
 
-            // Create the item from prefab at mouse position
-            GameObject itemGameObject = Instantiate(itemPrefab, worldPos, Quaternion.identity, parentItem);
-            Item item = itemGameObject.GetComponent<Item>();
-            item.ItemCode = itemDetails.itemCode;
-
-            // Remove item from player's inventory
-            InventoryManager.Instance.RemoveItem(InventoryLocation.player, item.ItemCode);
-
-            // Clear selected item if it was removed from the inventory
-            if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, item.ItemCode) == -1)
+            if (gridCursor.CursorPositionIsValid)
             {
-                ClearSelectedItem();
+                // create item from prefab at mouseposition
+                GameObject itemGameObject = Instantiate(itemPrefab, new Vector3(worldPos.x, worldPos.y - Settings.gridCellSize / 2, worldPos.z), Quaternion.identity, parentItem);
+
+                Item item = itemGameObject.GetComponent<Item>();
+                item.ItemCode = itemDetails.itemCode;
+
+                // Remove item from players inventory
+                InventoryManager.Instance.RemoveItem(InventoryLocation.player, item.ItemCode);
+
+                if (InventoryManager.Instance.FindItemInInventory(InventoryLocation.player, item.ItemCode) == -1)
+                {
+                    ClearSelectedItem();
+                }
+
             }
         }
     }
+
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -185,6 +204,20 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         isSelected = true;
 
         inventoryBar.SetHighlightedInventorySlots();
+
+        gridCursor.ItemUseGridRadius = itemDetails.itemUseGridRadius;
+
+        if (itemDetails.itemUseGridRadius > 0)
+        {
+            gridCursor.EnableCursor();
+        }
+        else
+        {
+            gridCursor.DisableCursor();
+        }
+
+        gridCursor.SelectedItemType = itemDetails.itemType;
+
         InventoryManager.Instance.SetSelectedInventoryItem(InventoryLocation.player, itemDetails.itemCode);
 
         // Show carried item or clear it based on item's properties
@@ -200,6 +233,8 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void ClearSelectedItem()
     {
+        ClearCursors();
+
         // Clear currently highlighted items
         inventoryBar.ClearHighlightOnInventorySlots();
         isSelected = false;

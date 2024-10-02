@@ -7,7 +7,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     private int[] selectedInventoryItem;
     public List<InventoryItem>[] inventoryLists;
     [HideInInspector] public int[] inventoryListCapacityIntArray;
-    [SerializeField] private SO_ItemList itemList = null;
+    [SerializeField] private SO_ItemList itemListSO = null;
 
     protected override void Awake()
     {
@@ -43,7 +43,7 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     private void CreateItemsDetailsDictionary()
     {
         itemDetailsDictionary = new Dictionary<int, ItemDetails>();
-        foreach (ItemDetails itemDetails in itemList.itemDetails)
+        foreach (ItemDetails itemDetails in itemListSO.itemDetails)
         {
             itemDetailsDictionary[itemDetails.itemCode] = itemDetails;
         }
@@ -118,6 +118,20 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
     {
         itemDetailsDictionary.TryGetValue(itemCode, out ItemDetails itemDetails);
         return itemDetails;
+    }
+
+    public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
+    {
+        int itemCode = GetSelectedInventoryItem(inventoryLocation);
+
+        if (itemCode == -1) return null;
+
+        return GetItemDetails(itemCode);
+    }
+
+    private int GetSelectedInventoryItem(InventoryLocation inventoryLocation)
+    {
+        return selectedInventoryItem[(int)inventoryLocation];
     }
 
     public void SwapInventoryItems(InventoryLocation inventoryLocation, int fromItem, int toItem)

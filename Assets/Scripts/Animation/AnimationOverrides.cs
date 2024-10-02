@@ -4,7 +4,7 @@ using UnityEngine;
 public class AnimationOverrides : MonoBehaviour
 {
     [SerializeField] private GameObject character = null;
-    [SerializeField] private SO_AnimationType[] animationTypes = null;
+    [SerializeField] private SO_AnimationType[] animationTypesSO = null;
 
     private Dictionary<AnimationClip, SO_AnimationType> animationTypeByClip;
     private Dictionary<string, SO_AnimationType> animationTypeByCompositeKey;
@@ -14,7 +14,7 @@ public class AnimationOverrides : MonoBehaviour
         animationTypeByClip = new Dictionary<AnimationClip, SO_AnimationType>();
         animationTypeByCompositeKey = new Dictionary<string, SO_AnimationType>();
 
-        foreach (SO_AnimationType animationType in animationTypes)
+        foreach (SO_AnimationType animationType in animationTypesSO)
         {
             animationTypeByClip.Add(animationType.animationClip, animationType);
 

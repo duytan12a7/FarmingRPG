@@ -38,11 +38,11 @@ public class ItemCodeDescriptionDrawer : PropertyDrawer
     // Retrieves the item description based on the item code
     private string GetItemDescription(int itemCode)
     {
-        SO_ItemList itemList = AssetDatabase.LoadAssetAtPath<SO_ItemList>("Assets/Scriptable Objects Assets/Item/so_ItemList.asset");
+        SO_ItemList itemListSO = AssetDatabase.LoadAssetAtPath<SO_ItemList>("Assets/Scriptable Objects Assets/Item/so_ItemList.asset");
 
-        if (itemList != null)
+        if (itemListSO != null)
         {
-            ItemDetails itemDetail = itemList.itemDetails.Find(x => x.itemCode == itemCode);
+            ItemDetails itemDetail = itemListSO.itemDetails.Find(x => x.itemCode == itemCode);
 
             return itemDetail != null ? itemDetail.itemDescription : string.Empty;
         }
