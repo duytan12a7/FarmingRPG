@@ -91,16 +91,24 @@ public class PlayerInputHandler : MonoBehaviour
                 break;
 
             case ItemType.Hoeing_tool:
-                ProcessPlayerClickInputTool(gridPropertyDetails, playerDirection);
+            case ItemType.Watering_tool:
+                ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                 break;
         }
     }
 
-    private void ProcessPlayerClickInputTool(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
+    private void ProcessPlayerClickInputTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
     {
-        if (gridCursor.CursorPositionIsValid)
+        switch (itemDetails.itemType)
         {
-            playerCtrl.PlayerAnimation.HoeGroundAtCursor(gridPropertyDetails, playerDirection);
+            case ItemType.Hoeing_tool:
+                if (gridCursor.CursorPositionIsValid)
+                    playerCtrl.PlayerAnimation.HoeGroundAtCursor(gridPropertyDetails, playerDirection);
+                break;
+            case ItemType.Watering_tool:
+                if (gridCursor.CursorPositionIsValid)
+                    playerCtrl.PlayerAnimation.WaterGroundAtCursor(gridPropertyDetails, playerDirection);
+                break;
         }
     }
 

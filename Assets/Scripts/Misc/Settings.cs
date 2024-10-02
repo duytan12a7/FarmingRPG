@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class Settings
@@ -17,8 +15,12 @@ public static class Settings
     public const float DiagonalMovementFactor = 0.71f;
     public const float runningSpeed = 5.333f;
     public const float walkingSpeed = 2.666f;
+
     public static float useToolAnimationPause = 0.25f;
     public static float afterUseToolAnimationPause = 0.2f;
+
+    public static float liftToolAnimationPause = 0.4f;
+    public static float afterLiftToolAnimationPause = 0.2f;
 
     // Inventory
     public static int playerInitialInventoryCapacity = 24;
