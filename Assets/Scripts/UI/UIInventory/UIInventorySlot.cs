@@ -8,8 +8,12 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 {
     public Camera mainCamera;
     private Canvas parentCanvas;
+
     private GridCursor gridCursor;
+    private Cursor cursor;
+
     private Transform parentItem;
+
     private GameObject draggedItem;
 
     public Image inventorySlotHightlight;
@@ -28,13 +32,16 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         parentCanvas = GetComponentInParent<Canvas>();
         gridCursor = FindObjectOfType<GridCursor>();
+        cursor = FindObjectOfType<Cursor>();
     }
 
     private void ClearCursors()
     {
         gridCursor.DisableCursor();
+        cursor.DisableCursor();
 
         gridCursor.SelectedItemType = ItemType.none;
+        cursor.SelectedItemType = ItemType.none;
     }
 
     private void OnEnable()
@@ -206,6 +213,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         inventoryBar.SetHighlightedInventorySlots();
 
         gridCursor.ItemUseGridRadius = itemDetails.itemUseGridRadius;
+        cursor.ItemUseRadius = itemDetails.itemUseRadius;
 
         if (itemDetails.itemUseGridRadius > 0)
         {
@@ -216,7 +224,17 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             gridCursor.DisableCursor();
         }
 
+        if (itemDetails.itemUseRadius > 0f)
+        {
+            cursor.EnableCursor();
+        }
+        else
+        {
+            cursor.DisableCursor();
+        }
+
         gridCursor.SelectedItemType = itemDetails.itemType;
+        cursor.SelectedItemType = itemDetails.itemType;
 
         InventoryManager.Instance.SetSelectedInventoryItem(InventoryLocation.player, itemDetails.itemCode);
 

@@ -65,6 +65,14 @@ public enum PartVariantType
     count,
 }
 
+public enum ToolAction
+{
+    usingTool,
+    liftingTool,
+    reapingTool,
+    pickingTool
+}
+
 public enum GridBoolProperty
 {
     diggable,
@@ -86,7 +94,6 @@ public enum ToolEffect
 {  
     none,
     watering,
-
 }
 
 public enum Direction 
@@ -130,8 +137,6 @@ public enum Season
     Summer,
     Autumn,
     Winter,
-    
-
 }
 
 

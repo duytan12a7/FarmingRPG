@@ -6,26 +6,14 @@ public class PlayerAnimation : MonoBehaviour
 {
     private PlayerController playerCtrl;
 
-    protected bool isCarrying = false;
+    private bool isCarrying = false;
 
-    protected bool isLiftingToolRight;
-    protected bool isLiftingToolLeft;
-    protected bool isLiftingToolUp;
-    protected bool isLiftingToolDown;
-    protected bool isUsingToolRight;
-    protected bool isUsingToolLeft;
-    protected bool isUsingToolUp;
-    protected bool isUsingToolDown;
-    protected bool isSwingingToolRight;
-    protected bool isSwingingToolLeft;
-    protected bool isSwingingToolUp;
-    protected bool isSwingingToolDown;
-    protected bool isPickingRight;
-    protected bool isPickingLeft;
-    protected bool isPickingUp;
-    protected bool isPickingDown;
+    private bool isLiftingToolRight, isLiftingToolLeft, isLiftingToolUp, isLiftingToolDown;
+    private bool isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown;
+    private bool isSwingingToolRight, isSwingingToolLeft, isSwingingToolUp, isSwingingToolDown;
+    private bool isPickingRight, isPickingLeft, isPickingUp, isPickingDown;
 
-    protected ToolEffect toolEffect = ToolEffect.none;
+    private ToolEffect toolEffect = ToolEffect.none;
 
     [Tooltip("Should be populated in the prefab with the equipped item sprite renderer")]
     [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
@@ -65,6 +53,7 @@ public class PlayerAnimation : MonoBehaviour
         isPickingRight = isPickingLeft = isPickingUp = isPickingDown = false;
         isUsingToolRight = isUsingToolLeft = isUsingToolUp = isUsingToolDown = false;
         isLiftingToolRight = isLiftingToolLeft = isLiftingToolUp = isLiftingToolDown = false;
+        isSwingingToolRight = isSwingingToolLeft = isSwingingToolUp = isSwingingToolDown = false;
         toolEffect = ToolEffect.none;
     }
 
@@ -82,11 +71,11 @@ public class PlayerAnimation : MonoBehaviour
     public void ShowCarriedItem(int itemCode)
     {
         ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(itemCode);
-        if (itemDetails != null)
-        {
-            UpdateEquippedItem(itemDetails.itemSprite, PartVariantType.carry);
-            isCarrying = true;
-        }
+
+        if (itemDetails == null) return;
+
+        UpdateEquippedItem(itemDetails.itemSprite, PartVariantType.carry);
+        isCarrying = true;
     }
 
     public void ClearCarriedItem()
@@ -119,105 +108,164 @@ public class PlayerAnimation : MonoBehaviour
 
     public void HoeGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
-        StartCoroutine(HoeGroundAtCursorRoutine(gridPropertyDetails, playerDirection));
-    }
-
-    private IEnumerator HoeGroundAtCursorRoutine(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
-    {
-        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
-        PlayerToolUseDisabled = true;
-
-        toolCharacterAttribute.variantType = PartVariantType.hoe;
-        characterAttributes.Clear();
-        characterAttributes.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisation(characterAttributes);
-
-        SetToolUsingFlags(playerDirection);
-
-        yield return useToolAnimationPause;
-
-        gridPropertyDetails.daysSinceDug = gridPropertyDetails.daysSinceDug == -1 ? 0 : gridPropertyDetails.daysSinceDug;
-        GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
-
-        GridPropertiesManager.Instance.DisplayDugGround(gridPropertyDetails);
-
-        yield return afterUseToolAnimationPause;
-
-        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
-        PlayerToolUseDisabled = false;
+        StartCoroutine(PerformToolAction(gridPropertyDetails, playerDirection, PartVariantType.hoe, ToolAction.usingTool, ToolEffect.none));
     }
 
     public void WaterGroundAtCursor(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
     {
-        StartCoroutine(WaterGroundAtCursorRoutine(gridPropertyDetails, playerDirection));
+        StartCoroutine(PerformToolAction(gridPropertyDetails, playerDirection, PartVariantType.wateringCan, ToolAction.liftingTool, ToolEffect.watering));
     }
 
-    private IEnumerator WaterGroundAtCursorRoutine(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection)
+    private (WaitForSeconds toolPause, WaitForSeconds afterToolPause) GetToolPauseTimes(ToolAction toolAction)
+    {
+        return toolAction switch
+        {
+            ToolAction.usingTool => (useToolAnimationPause, afterUseToolAnimationPause),
+            ToolAction.liftingTool => (liftToolAnimationPause, afterLiftToolAnimationPause),
+            _ => (new WaitForSeconds(0), new WaitForSeconds(0)),
+        };
+    }
+
+    private IEnumerator PerformToolAction(GridPropertyDetails gridPropertyDetails, Vector3Int playerDirection, PartVariantType toolType, ToolAction toolAction, ToolEffect effect)
     {
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
         PlayerToolUseDisabled = true;
+        var (toolPause, afterToolPause) = GetToolPauseTimes(toolAction);
 
-        // Set tool animation to watering can in override aniamtion
-        toolCharacterAttribute.variantType = PartVariantType.wateringCan;
+        toolCharacterAttribute.variantType = toolType;
         characterAttributes.Clear();
         characterAttributes.Add(toolCharacterAttribute);
         animationOverrides.ApplyCharacterCustomisation(characterAttributes);
 
-        // TODO if there is water in teh watering can
-        toolEffect = ToolEffect.watering;
+        toolEffect = effect;
+        SetToolFlags(playerDirection, toolAction);
 
-        if (playerDirection == Vector3Int.right)
-        {
-            isLiftingToolRight = true;
-        }
-        else if (playerDirection == Vector3Int.left)
-        {
-            isLiftingToolLeft = true;
-        }
-        else if (playerDirection == Vector3Int.up)
-        {
-            isLiftingToolUp = true;
-        }
-        else if (playerDirection == Vector3Int.down)
-        {
-            isLiftingToolDown = true;
-        }
+        yield return toolPause;
 
-        yield return liftToolAnimationPause;
-
-        // Set Grid Property details for watering ground
-        if (gridPropertyDetails.daysSinceWatered == -1)
+        if (toolType == PartVariantType.hoe)
         {
-            gridPropertyDetails.daysSinceWatered = 0;
+            gridPropertyDetails.daysSinceDug = gridPropertyDetails.daysSinceDug == -1 ? 0 : gridPropertyDetails.daysSinceDug;
+            GridPropertiesManager.Instance.DisplayDugGround(gridPropertyDetails);
+        }
+        else if (toolType == PartVariantType.wateringCan)
+        {
+            if (gridPropertyDetails.daysSinceWatered == -1)
+            {
+                gridPropertyDetails.daysSinceWatered = 0;
+            }
+            GridPropertiesManager.Instance.DisplayWateredGround(gridPropertyDetails);
         }
 
-        // Set Grid property to watered
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
-        GridPropertiesManager.Instance.DisplayWateredGround(gridPropertyDetails);
 
-        // After animation pause
-        yield return afterLiftToolAnimationPause;
+        yield return afterToolPause;
 
-        // Allow player input
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
+        PlayerToolUseDisabled = false;
+    }
+
+
+    public void ReapInPlayerDirectionAtCursor(ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(ReapInPlayerDirectionAtCursorRoutine(itemDetails, playerDirection));
+    }
+
+    private IEnumerator ReapInPlayerDirectionAtCursorRoutine(ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
+        PlayerToolUseDisabled = true;
+
+        toolCharacterAttribute.variantType = PartVariantType.scythe;
+        characterAttributes.Clear();
+        characterAttributes.Add(toolCharacterAttribute);
+        animationOverrides.ApplyCharacterCustomisation(characterAttributes);
+
+        UseToolInPlayerDirection(itemDetails, playerDirection);
+
+        yield return useToolAnimationPause;
+
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
         PlayerToolUseDisabled = false;
 
-
     }
 
-    private void SetToolUsingFlags(Vector3Int playerDirection)
+    private void UseToolInPlayerDirection(ItemDetails equippedItemDetails, Vector3Int playerDirection)
     {
-        isUsingToolRight = playerDirection == Vector3Int.right;
-        isUsingToolLeft = playerDirection == Vector3Int.left;
-        isUsingToolUp = playerDirection == Vector3Int.up;
-        isUsingToolDown = playerDirection == Vector3Int.down;
+        if (!Input.GetMouseButton(0)) return;
+
+        SetToolFlags(playerDirection, ToolAction.reapingTool);
+
+        Vector2 point = new(
+            playerCtrl.GetPlayerCentrePosition().x + (playerDirection.x * (equippedItemDetails.itemUseRadius / 2f)),
+            playerCtrl.GetPlayerCentrePosition().y + (playerDirection.y * (equippedItemDetails.itemUseRadius / 2f)));
+
+        Vector2 size = new(equippedItemDetails.itemUseRadius, equippedItemDetails.itemUseRadius);
+
+        // Get Item componenets with 2D collider located in teh house at the center point defined ( 2d colliders tested limited to maxCollidersTo Test Perreap swing)
+        Item[] itemArray = HelperMethods.GetComponentsAtBoxLocationNonAlloc<Item>(Settings.maxCollidersToTestReapSwing, point, size, 0f);
+
+        int reapableItemCount = 0;
+
+        // Loop through all items retrieved 
+        for (int i = itemArray.Length - 1; i >= 0; i--)
+        {
+            if (itemArray[i] != null)
+            {
+                // Destroy item game object if reapable
+                if (InventoryManager.Instance.GetItemDetails(itemArray[i].ItemCode).itemType == ItemType.Reapable_scenery)
+                {
+                    Vector3 effectPosition = new(
+                        itemArray[i].transform.position.x,
+                        itemArray[i].transform.position.y + Settings.gridCellSize / 2f,
+                        itemArray[i].transform.position.z);
+
+                    itemArray[i].gameObject.SetActive(false);
+                    //Destroy(itemArray[i].gameObject);
+
+                    reapableItemCount++;
+                    if (reapableItemCount >= Settings.maxTargetComponentsToDestroyReapSwing)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
     }
 
-    private void SetToolLiftingFlags(Vector3Int playerDirection)
+    private void SetToolFlags(Vector3Int playerDirection, ToolAction toolAction)
     {
-        isLiftingToolRight = playerDirection == Vector3Int.right;
-        isLiftingToolLeft = playerDirection == Vector3Int.left;
-        isLiftingToolUp = playerDirection == Vector3Int.up;
-        isLiftingToolDown = playerDirection == Vector3Int.down;
+        bool isRight = playerDirection == Vector3Int.right;
+        bool isLeft = playerDirection == Vector3Int.left;
+        bool isUp = playerDirection == Vector3Int.up;
+        bool isDown = playerDirection == Vector3Int.down;
+
+        if (toolAction == ToolAction.usingTool)
+        {
+            isUsingToolRight = isRight;
+            isUsingToolLeft = isLeft;
+            isUsingToolUp = isUp;
+            isUsingToolDown = isDown;
+        }
+        else if (toolAction == ToolAction.reapingTool)
+        {
+            isSwingingToolRight = isRight;
+            isSwingingToolLeft = isLeft;
+            isSwingingToolUp = isUp;
+            isSwingingToolDown = isDown;
+        }
+        else if (toolAction == ToolAction.liftingTool)
+        {
+            isLiftingToolRight = isRight;
+            isLiftingToolLeft = isLeft;
+            isLiftingToolUp = isUp;
+            isLiftingToolDown = isDown;
+        }
+        else if (toolAction == ToolAction.pickingTool)
+        {
+            isPickingRight = isRight;
+            isPickingLeft = isLeft;
+            isPickingUp = isUp;
+            isPickingDown = isDown;
+        }
     }
 }

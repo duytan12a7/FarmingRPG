@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24c2414b6791dd5e1b44557acb421a1c, type: 3}
-  m_Name: SO_ItemList
+  m_Name: so_ItemList
   m_EditorClassIdentifier: 
   itemDetails:
   - itemCode: 10000
@@ -228,7 +228,7 @@ MonoBehaviour:
     itemDescription: A Basic Scythe for Reaping
     itemSprite: {fileID: 21300506, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: A sharp, basic scythe - great for cutting grass
-    itemUseGridRadius: 2
+    itemUseGridRadius: 0
     itemUseRadius: 1.5
     isStartingItem: 1
     canBePickedUp: 1
