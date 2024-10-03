@@ -20,6 +20,13 @@ public static class EventHandler
         DropSelectedItemEvent?.Invoke();
     }
 
+    public static event Action RemoveSelectedItemFromInventoryEvent;
+
+    public static void CallRemoveSelectedItemFromInventoryEvent()
+    {
+        RemoveSelectedItemFromInventoryEvent?.Invoke();
+    }
+
     public static event Action<Vector3, HarvestActionEffect> HarvestActionEffectEvent;
 
     public static void CallHarvestActionEffectEvent(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)

@@ -89,11 +89,11 @@ public class PlayerInputHandler : MonoBehaviour
         switch (itemDetails.itemType)
         {
             case ItemType.Seed:
+                ProcessPlayerClickInputSeed(gridPropertyDetails, itemDetails);
+                break;
+
             case ItemType.Commodity:
-                if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid)
-                {
-                    EventHandler.CallDropSelectedItemEvent();
-                }
+                ProcessPlayerClickInputCommodity(itemDetails);
                 break;
 
             case ItemType.Hoeing_tool:
@@ -123,6 +123,36 @@ public class PlayerInputHandler : MonoBehaviour
                     playerCtrl.PlayerAnimation.ReapInPlayerDirectionAtCursor(itemDetails, playerDirection);
                 }
                 break;
+        }
+    }
+
+    private void ProcessPlayerClickInputSeed(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
+    {
+        if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid && gridPropertyDetails.daysSinceDug > -1 && gridPropertyDetails.seedItemCode == -1)
+        {
+            PlantSeedAtCursor(gridPropertyDetails, itemDetails);
+        }
+        else if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid)
+        {
+            EventHandler.CallDropSelectedItemEvent();
+        }
+    }
+
+    private void PlantSeedAtCursor(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
+    {
+        gridPropertyDetails.seedItemCode = itemDetails.itemCode;
+        gridPropertyDetails.growthDays = 0;
+
+        GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
+
+        EventHandler.CallRemoveSelectedItemFromInventoryEvent();
+    }
+
+    private void ProcessPlayerClickInputCommodity(ItemDetails itemDetails)
+    {
+        if (itemDetails.canBeDropped && gridCursor.CursorPositionIsValid)
+        {
+            EventHandler.CallDropSelectedItemEvent();
         }
     }
 
