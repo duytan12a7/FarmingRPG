@@ -183,9 +183,7 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
                 #region Update all grid properties to reflect the advance in day
 
                 if (gridPropertyDetails.growthDays >= 0)
-                {
                     gridPropertyDetails.growthDays++;
-                }
                 // if ground is watered, then clear water
                 if (gridPropertyDetails.daysSinceWatered > -1)
                 {
@@ -359,4 +357,25 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
             gridPropertyDetails.gridY
         );
     }
+
+    public Crop GetCropObjectAtGridLocation(GridPropertyDetails gridPropertyDetails)
+    {
+        Vector3 worldPosition = grid.GetCellCenterWorld(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0));
+        Collider2D[] collider2Ds = Physics2D.OverlapPointAll(worldPosition);
+
+        Crop crop = null;
+
+        for (int i = 0; i < collider2Ds.Length; i++)
+        {
+            crop = collider2Ds[i].gameObject.GetComponentInParent<Crop>();
+            if (crop != null && crop.cropGridPosition == new Vector2Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY))
+                break;
+            crop = collider2Ds[i].gameObject.GetComponentInChildren<Crop>();
+            if (crop != null && crop.cropGridPosition == new Vector2Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY))
+                break;
+        }
+        return crop;
+    }
+
+    public CropDetails GetCropDetails(int seedItemCode) => sO_CropDetailsList.GetCropDetails(seedItemCode);
 }

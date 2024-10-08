@@ -99,6 +99,7 @@ public class PlayerInputHandler : MonoBehaviour
             case ItemType.Hoeing_tool:
             case ItemType.Watering_tool:
             case ItemType.Reaping_tool:
+            case ItemType.Collecting_tool:
                 ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                 break;
         }
@@ -115,6 +116,10 @@ public class PlayerInputHandler : MonoBehaviour
             case ItemType.Watering_tool:
                 if (gridCursor.CursorPositionIsValid)
                     playerCtrl.PlayerAnimation.WaterGroundAtCursor(gridPropertyDetails, playerDirection);
+                break;
+            case ItemType.Collecting_tool:
+                if (gridCursor.CursorPositionIsValid)
+                    playerCtrl.PlayerAnimation.CollectInPlayerDirection(gridPropertyDetails, itemDetails, playerDirection);
                 break;
             case ItemType.Reaping_tool:
                 if (cursor.CursorPositionIsValid)

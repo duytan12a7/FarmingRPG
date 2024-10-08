@@ -29,6 +29,9 @@ public class PlayerAnimation : MonoBehaviour
     private WaitForSeconds liftToolAnimationPause;
     private WaitForSeconds afterLiftToolAnimationPause;
 
+    private WaitForSeconds pickAnimationPause;
+    private WaitForSeconds afterPickAnimationPause;
+
     public bool PlayerToolUseDisabled { get; set; } = false;
 
     private void Awake()
@@ -46,6 +49,9 @@ public class PlayerAnimation : MonoBehaviour
 
         liftToolAnimationPause = new WaitForSeconds(Settings.liftToolAnimationPause);
         afterLiftToolAnimationPause = new WaitForSeconds(Settings.afterLiftToolAnimationPause);
+
+        pickAnimationPause = new WaitForSeconds(Settings.pickAnimationPause);
+        afterPickAnimationPause = new WaitForSeconds(Settings.afterPickAnimationPause);
     }
 
     public void ResetAnimationTriggers()
@@ -231,6 +237,40 @@ public class PlayerAnimation : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void CollectInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(CollectInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection));
+    }
+
+    private IEnumerator CollectInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
+        PlayerToolUseDisabled = true;
+
+        ProcessCropWithEquippedItemInPlayerDirection(playerDirection, itemDetails, gridPropertyDetails);
+
+        yield return pickAnimationPause;
+
+        yield return afterPickAnimationPause;
+
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
+        PlayerToolUseDisabled = false;
+    }
+
+    private void ProcessCropWithEquippedItemInPlayerDirection(Vector3Int playerDirection, ItemDetails itemDetails, GridPropertyDetails gridPropertyDetails)
+    {
+        SetToolFlags(playerDirection, ToolAction.pickingTool);
+
+        Crop crop = GridPropertiesManager.Instance.GetCropObjectAtGridLocation(gridPropertyDetails);
+
+        if(crop == null) return;
+        switch(itemDetails.itemType){
+            case ItemType.Collecting_tool:
+                crop.ProcessToolAction(itemDetails);
+                break;
         }
     }
 

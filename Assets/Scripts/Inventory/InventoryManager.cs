@@ -55,22 +55,22 @@ public class InventoryManager : SingletonMonobehaviour<InventoryManager>
         Destroy(gameObjectToDelete);
     }
 
-    public void AddItem(InventoryLocation inventoryLocation, Item item)
-    {
-        int itemCode = item.ItemCode;
-        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
-        int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
+    public void AddItem(InventoryLocation inventoryLocation, Item item) => AddItem(inventoryLocation, item.ItemCode);
 
+    public void AddItem(InventoryLocation inventoryLocation, int itemCode)
+    {
+        List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
+
+        int itemPosition = FindItemInInventory(inventoryLocation, itemCode);
         if (itemPosition != -1)
         {
-            UpdateItemQuantity(inventoryList, itemCode, itemPosition, 1);
+            UpdateItemQuantity(inventoryItems, itemCode, itemPosition, 1);
         }
         else
         {
-            inventoryList.Add(new InventoryItem { itemCode = itemCode, itemQuantity = 1 });
+            inventoryItems.Add(new InventoryItem { itemCode = itemCode, itemQuantity = 1 });
         }
-
-        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryList);
+        EventHandler.CallInventoryUpdatedEvent(inventoryLocation, inventoryItems);
     }
 
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)

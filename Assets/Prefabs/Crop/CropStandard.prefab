@@ -162,7 +162,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.25}
+  m_Size: {x: 0.25, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &5510207814986937631
 MonoBehaviour:
@@ -176,6 +176,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39dbf25477ec24530b1a52ec36167edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _harvestActionEffectTransform: {fileID: 0}
+  _cropHarvestedSpriteRenderer: {fileID: 0}
   cropGridPosition: {x: 0, y: 0}
 --- !u!114 &6751891321334631329
 MonoBehaviour:
