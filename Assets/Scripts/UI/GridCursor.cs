@@ -14,6 +14,8 @@ public class GridCursor : MonoBehaviour
     [SerializeField] private Sprite greenCursorSprite = null;
     [SerializeField] private Sprite redCursorSprite = null;
 
+    [SerializeField] private SO_CropDetailsList sO_CropDetailsList;
+
     public bool CursorPositionIsValid { get; private set; } = false;
     public int ItemUseGridRadius { get; set; } = 0;
     public ItemType SelectedItemType { get; set; }
@@ -183,6 +185,17 @@ public class GridCursor : MonoBehaviour
                 {
                     return false;
                 }
+
+            case ItemType.Collecting_tool:
+                if (gridPropertyDetails.seedItemCode == -1)
+                    return false;
+
+                CropDetails cropDetails = sO_CropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
+                if (cropDetails == null)
+                    return false;
+
+                return gridPropertyDetails.growthDays >= cropDetails.totalGrowthDays &&
+                       cropDetails.CanUseToolHarvestCrop(itemDetails.itemCode);
 
             default:
                 return false;

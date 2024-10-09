@@ -29,6 +29,9 @@ public static class Settings
     public static float liftToolAnimationPause = 0.4f;
     public static float afterLiftToolAnimationPause = 0.2f;
 
+    public static float pickAnimationPause = 1f;
+    public static float afterPickAnimationPause = 0.2f;
+
     // Inventory
     public static int playerInitialInventoryCapacity = 24;
     public static int playerMaxmumInventoryCapacity = 48;
@@ -80,8 +83,9 @@ public static class Settings
 
 
     // static constructor
-    static Settings(){
-        
+    static Settings()
+    {
+
 
         // Player Animation Parameters
         xInput = Animator.StringToHash("xInput");
@@ -109,14 +113,14 @@ public static class Settings
         isPickingLeft = Animator.StringToHash("isPickingLeft");
         isPickingUp = Animator.StringToHash("isPickingUp");
         isPickingDown = Animator.StringToHash("isPickingDown");
-        
+
         // Shared Animation parameters
         idleUp = Animator.StringToHash("idleUp");
         idleDown = Animator.StringToHash("idleDown");
         idleLeft = Animator.StringToHash("idleLeft");
         idleRight = Animator.StringToHash("idleRight");
-    
-    
-    } 
-    
+
+
+    }
+
 }

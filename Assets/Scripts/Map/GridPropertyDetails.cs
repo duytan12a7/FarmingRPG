@@ -1,3 +1,5 @@
+using System;
+
 [System.Serializable]
 public class GridPropertyDetails
 {
@@ -18,5 +20,13 @@ public class GridPropertyDetails
     public GridPropertyDetails()
     {
 
+    }
+
+    public void ClearCropData()
+    {
+        seedItemCode = -1;
+        growthDays = -1;
+        daysSinceLastHarvest = -1;
+        daysSinceWatered = -1;
     }
 }
