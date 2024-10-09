@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 
 public delegate void MovementDelegate(float inputX, float inputY, bool isWalking, bool isRunning, bool isIdle,
@@ -17,6 +18,13 @@ public static class EventHandler
     public static void CallDropSelectedItemEvent()
     {
         DropSelectedItemEvent?.Invoke();
+    }
+
+    public static event Action<Vector3, HarvestActionEffect> HarvestActionEffectEvent;
+
+    public static void CallHarvestActionEffectEvent(Vector3 effectPosition, HarvestActionEffect harvestActionEffect)
+    {
+        HarvestActionEffectEvent?.Invoke(effectPosition, harvestActionEffect);
     }
 
     // Inventory Updated Event
@@ -123,5 +131,4 @@ public static class EventHandler
     {
         AfterSceneLoadFadeInEvent?.Invoke();
     }
-
 }
