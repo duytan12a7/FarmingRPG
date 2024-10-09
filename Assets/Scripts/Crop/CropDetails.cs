@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -57,5 +58,20 @@ public class CropDetails
         InitializeToolActionMap();
 
         return harvestToolActionMap.TryGetValue(toolItemCode, out int requiredActions) ? requiredActions : -1;
+    }
+
+    public int GetGrowthStageForDays(int days)
+    {
+        int daysCounter = totalGrowthDays;
+        for (int x = growthDays.Length - 1; x >= 0; x--)
+        {
+            if (days >= daysCounter)
+            {
+                return x;
+            }
+            daysCounter -= growthDays[x];
+        }
+
+        throw new Exception($"Unexpected error calculating growth stage for days '{days}'");
     }
 }

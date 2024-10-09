@@ -1478,6 +1478,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d87c54ad5f3ee4b26aa06e892ee2a1e0, type: 2}
   - {fileID: 11400000, guid: 251c0f45242064726b34ebcba5b54cd9, type: 2}
   - {fileID: 11400000, guid: 976d7f1182f87493d83dde2ce4fcca28, type: 2}
+  sO_CropDetailsList: {fileID: 11400000, guid: 322936442c22e4554bdfbd8640c0f93d, type: 2}
   dugGround:
   - {fileID: 11400000, guid: f8e66cc7d97d146b8a2daf463e997350, type: 2}
   - {fileID: 11400000, guid: 1dc486601267543fb9e92cb4dfbc2c96, type: 2}
