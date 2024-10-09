@@ -691,7 +691,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: -526306901
   m_SortingLayer: 6
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!50 &191326300
 Rigidbody2D:
@@ -1430,6 +1430,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reapingPrefab: {fileID: 450769604193518549, guid: 74c1f946f73674274b46d9198d75b9d5, type: 3}
+  deciduousLeavesPrefab: {fileID: 4688439844125108287, guid: d426088a392b74b2bb0cc4742e65818a, type: 3}
+  choppingTreeTrunkPrefab: {fileID: 7353316231763634684, guid: 78c6f6afdd7e2438da55c6cd23ea463a, type: 3}
 --- !u!4 &584124779
 Transform:
   m_ObjectHideFlags: 0
@@ -2514,6 +2516,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 65d2668dcdbcb21d99d6b45bd3fe874e, type: 2}
   - {fileID: 11400000, guid: ec5380f675ffcbb43a3522748a44655c, type: 2}
   - {fileID: 11400000, guid: f9d539e7358b0d8e782aed318fefe8e9, type: 2}
+  - {fileID: 11400000, guid: 4e3eebed3452243b6ac398a65d496a94, type: 2}
+  - {fileID: 11400000, guid: c2457de0e9ec34bca963112271f7da4a, type: 2}
+  - {fileID: 11400000, guid: a34f2aa950b4d4d1780f0815dc353b0f, type: 2}
+  - {fileID: 11400000, guid: 2b53bb1ca1c1b458d87a7bfe9f38c072, type: 2}
+  - {fileID: 11400000, guid: 4f8ff7f013cb145ceb636dcfad9342db, type: 2}
+  - {fileID: 11400000, guid: 807f2a07837624d7fb360baee01b67d6, type: 2}
+  - {fileID: 11400000, guid: 42cd1d016190d4a47a5b144ed7df3c32, type: 2}
+  - {fileID: 11400000, guid: 234e7c847249f49408b24ecda22e522f, type: 2}
+  - {fileID: 11400000, guid: 737dcc993542b4d8eb771f6d5aa4cd78, type: 2}
+  - {fileID: 11400000, guid: 807991690895942239c39eb6238bb2b2, type: 2}
+  - {fileID: 11400000, guid: 9f789736ab09c4001aa7490dcf541f05, type: 2}
+  - {fileID: 11400000, guid: d14d181bbc1014d3791c8d3a855dc66a, type: 2}
+  - {fileID: 11400000, guid: af4899535d9724298b6af2d14e849e58, type: 2}
+  - {fileID: 11400000, guid: 6f95c5286348349b9a9f2146410df0d5, type: 2}
+  - {fileID: 11400000, guid: 01710b1e814874d6b9f9e53ac5cd53e6, type: 2}
+  - {fileID: 11400000, guid: 29921bde0663146a29b14a607ba2e96e, type: 2}
 --- !u!114 &870062899 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -4426376059044555240, guid: 61f1e8ad0328bd9a69bf5bb5e156e785, type: 3}
@@ -2566,8 +2584,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pools:
-  - poolSize: 0
+  - poolSize: 10
     prefab: {fileID: 450769604193518549, guid: 74c1f946f73674274b46d9198d75b9d5, type: 3}
+  - poolSize: 5
+    prefab: {fileID: 4688439844125108287, guid: d426088a392b74b2bb0cc4742e65818a, type: 3}
+  - poolSize: 5
+    prefab: {fileID: 7353316231763634684, guid: 78c6f6afdd7e2438da55c6cd23ea463a, type: 3}
   objectPoolTransform: {fileID: 1127708884}
 --- !u!4 &1127708884
 Transform:

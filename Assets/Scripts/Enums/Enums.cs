@@ -70,7 +70,8 @@ public enum ToolAction
     usingTool,
     liftingTool,
     reapingTool,
-    pickingTool
+    pickingTool,
+    choppingTool,
 }
 
 public enum GridBoolProperty
@@ -90,8 +91,8 @@ public enum InventoryLocation
 
 }
 
-public enum ToolEffect 
-{  
+public enum ToolEffect
+{
     none,
     watering,
 }
@@ -100,13 +101,13 @@ public enum HarvestActionEffect
 {
     deciduousLeavesFalling,
     pineConesFalling,
-    choppingTreTrunk,
+    choppingTreeTrunk,
     breakingStone,
     reaping,
     none
 }
 
-public enum Direction 
+public enum Direction
 {
     up,
     down,

@@ -20,7 +20,7 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
     // Called after the scene has been loaded to assign parent transform for items
     private void AfterSceneLoad()
     {
-        parentItem = GameObject.FindGameObjectWithTag(Tags.ItemsParentTransform).transform;
+        parentItem = GameObject.FindGameObjectWithTag(Global.Tags.ItemsParentTransform).transform;
     }
 
     protected override void Awake()
@@ -114,9 +114,9 @@ public class SceneItemsManager : SingletonMonobehaviour<SceneItemsManager>, ISav
     // Restore the saved state of the scene items
     public void IRestoreSceneData(string sceneName)
     {
-        if(GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
+        if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
         {
-            if(sceneSave.sceneItems != null)
+            if (sceneSave.sceneItems != null)
             {
                 DestroySceneItems();
 

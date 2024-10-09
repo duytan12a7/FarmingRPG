@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,7 +9,7 @@ public class CropDetails
     [ItemCodeDescription]
     public int seedItemCode;
     public int[] growthDays;
-    public int totalGrowthDays;
+    public int totalGrowthDays => growthDays.Sum();
     public GameObject[] growthPrefab;
     public Sprite[] growthSprites;
     public Season[] seasons;

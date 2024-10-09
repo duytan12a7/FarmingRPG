@@ -262,16 +262,47 @@ public class PlayerAnimation : MonoBehaviour
 
     private void ProcessCropWithEquippedItemInPlayerDirection(Vector3Int playerDirection, ItemDetails itemDetails, GridPropertyDetails gridPropertyDetails)
     {
-        SetToolFlags(playerDirection, ToolAction.pickingTool);
-
         Crop crop = GridPropertiesManager.Instance.GetCropObjectAtGridLocation(gridPropertyDetails);
 
-        if(crop == null) return;
-        switch(itemDetails.itemType){
+        if (crop == null) return;
+        switch (itemDetails.itemType)
+        {
+            case ItemType.Chopping_tool:
+                SetToolFlags(playerDirection, ToolAction.usingTool);
+                crop.ProcessToolAction(itemDetails, isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown);
+                break;
+
             case ItemType.Collecting_tool:
-                crop.ProcessToolAction(itemDetails);
+                SetToolFlags(playerDirection, ToolAction.pickingTool);
+                crop.ProcessToolAction(itemDetails, isPickingRight, isPickingLeft, isPickingUp, isPickingDown);
                 break;
         }
+    }
+
+    public void ChopInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(ChopInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection));
+    }
+
+    private IEnumerator ChopInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
+        PlayerToolUseDisabled = true;
+
+        toolCharacterAttribute.variantType = PartVariantType.axe;
+        toolCharacterAttribute.partAnimator = CharacterPartAnimator.tool;
+        characterAttributes.Clear();
+        characterAttributes.Add(toolCharacterAttribute);
+        animationOverrides.ApplyCharacterCustomisation(characterAttributes);
+
+        ProcessCropWithEquippedItemInPlayerDirection(playerDirection, itemDetails, gridPropertyDetails);
+
+        yield return useToolAnimationPause;
+
+        yield return afterUseToolAnimationPause;
+
+        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
+        PlayerToolUseDisabled = false;
     }
 
     private void SetToolFlags(Vector3Int playerDirection, ToolAction toolAction)

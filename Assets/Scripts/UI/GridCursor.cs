@@ -185,7 +185,7 @@ public class GridCursor : MonoBehaviour
                 {
                     return false;
                 }
-
+            case ItemType.Chopping_tool:
             case ItemType.Collecting_tool:
                 if (gridPropertyDetails.seedItemCode == -1)
                     return false;
