@@ -44,13 +44,13 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     private void AfterSceneLoaded()
     {
-        GameObject cropParent = GameObject.FindGameObjectWithTag(Tags.CropsParentTransform);
+        GameObject cropParent = GameObject.FindGameObjectWithTag(Global.Tags.CropsParentTransform);
         cropParentTransform = cropParent != null ? cropParent.transform : null;
 
         grid = FindObjectOfType<Grid>();
 
-        groundDecoration1 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration1).GetComponent<Tilemap>();
-        groundDecoration2 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration2).GetComponent<Tilemap>();
+        groundDecoration1 = GameObject.FindGameObjectWithTag(Global.Tags.GroundDecoration1).GetComponent<Tilemap>();
+        groundDecoration2 = GameObject.FindGameObjectWithTag(Global.Tags.GroundDecoration2).GetComponent<Tilemap>();
     }
 
     private void Start()
@@ -143,6 +143,11 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     public GridPropertyDetails GetGridPropertyDetails(int gridX, int gridY)
     {
         return GetGridPropertyDetails(gridX, gridY, gridProperties);
+    }
+
+    public GridPropertyDetails GetGridPropertyDetails(Vector2Int pos)
+    {
+        return GetGridPropertyDetails(pos.x, pos.y);
     }
 
     public void SetGridPropertyDetails(int gridX, int gridY, GridPropertyDetails gridPropertyDetails, Dictionary<string, GridPropertyDetails> gridPropertyDictionary)

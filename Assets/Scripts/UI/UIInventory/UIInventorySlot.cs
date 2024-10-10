@@ -280,6 +280,6 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void SceneLoaded()
     {
         // Find the parent item transform after the scene is loaded
-        parentItem = GameObject.FindGameObjectWithTag(Tags.ItemsParentTransform).transform;
+        parentItem = GameObject.FindGameObjectWithTag(Global.Tags.ItemsParentTransform).transform;
     }
 }
