@@ -188,6 +188,7 @@ public class GridCursor : MonoBehaviour
                 }
             case ItemType.Chopping_tool:
             case ItemType.Collecting_tool:
+            case ItemType.Breaking_tool:
                 if (gridPropertyDetails.seedItemCode == -1)
                     return false;
 

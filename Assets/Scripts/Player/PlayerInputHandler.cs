@@ -101,6 +101,7 @@ public class PlayerInputHandler : MonoBehaviour
             case ItemType.Reaping_tool:
             case ItemType.Collecting_tool:
             case ItemType.Chopping_tool:
+            case ItemType.Breaking_tool:
                 ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                 break;
         }
@@ -110,6 +111,15 @@ public class PlayerInputHandler : MonoBehaviour
     {
         switch (itemDetails.itemType)
         {
+            // Cursor
+            case ItemType.Reaping_tool:
+                if (cursor.CursorPositionIsValid)
+                {
+                    playerDirection = GetPlayerDirection(cursor.GetWorldPositionForCursor(), playerCtrl.GetPlayerCentrePosition());
+                    playerCtrl.PlayerAnimation.ReapInPlayerDirectionAtCursor(itemDetails, playerDirection);
+                }
+                break;
+            // GridCursor
             case ItemType.Hoeing_tool:
                 if (gridCursor.CursorPositionIsValid)
                     playerCtrl.PlayerAnimation.HoeGroundAtCursor(gridPropertyDetails, playerDirection);
@@ -126,11 +136,10 @@ public class PlayerInputHandler : MonoBehaviour
                 if (gridCursor.CursorPositionIsValid)
                     playerCtrl.PlayerAnimation.CollectInPlayerDirection(gridPropertyDetails, itemDetails, playerDirection);
                 break;
-            case ItemType.Reaping_tool:
-                if (cursor.CursorPositionIsValid)
+            case ItemType.Breaking_tool:
+                if (gridCursor.CursorPositionIsValid)
                 {
-                    playerDirection = GetPlayerDirection(cursor.GetWorldPositionForCursor(), playerCtrl.GetPlayerCentrePosition());
-                    playerCtrl.PlayerAnimation.ReapInPlayerDirectionAtCursor(itemDetails, playerDirection);
+                    playerCtrl.PlayerAnimation.BreakInPlayerDirection(gridPropertyDetails, itemDetails, playerDirection);
                 }
                 break;
         }

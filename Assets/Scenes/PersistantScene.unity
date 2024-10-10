@@ -597,7 +597,7 @@ Transform:
   m_GameObject: {fileID: 174915390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -8.51, y: 2.13, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -667,7 +667,7 @@ Transform:
   m_GameObject: {fileID: 191326297}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -8.51, y: 2.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1433,6 +1433,7 @@ MonoBehaviour:
   deciduousLeavesFallingPrefab: {fileID: 4688439844125108287, guid: d426088a392b74b2bb0cc4742e65818a, type: 3}
   pineConesFallingPrefab: {fileID: 4688439844125108287, guid: 6db90daa8e1b54716a7c90db9d42802c, type: 3}
   choppingTreeTrunkPrefab: {fileID: 7353316231763634684, guid: 78c6f6afdd7e2438da55c6cd23ea463a, type: 3}
+  breakingStonePrefab: {fileID: 7353316231763634684, guid: a332827cb07a140eda291d5948f34d3a, type: 3}
 --- !u!4 &584124779
 Transform:
   m_ObjectHideFlags: 0
@@ -2533,6 +2534,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6f95c5286348349b9a9f2146410df0d5, type: 2}
   - {fileID: 11400000, guid: 01710b1e814874d6b9f9e53ac5cd53e6, type: 2}
   - {fileID: 11400000, guid: 29921bde0663146a29b14a607ba2e96e, type: 2}
+  - {fileID: 11400000, guid: ac60e21f910e14995b6522f9ae78ecc3, type: 2}
+  - {fileID: 11400000, guid: 592b8e81286594be496731aeb882a06f, type: 2}
+  - {fileID: 11400000, guid: 888091a7d2a844ed5be6e72661ed9bcd, type: 2}
+  - {fileID: 11400000, guid: 12934a054c02f4ac3821472123f68772, type: 2}
 --- !u!114 &870062899 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -4426376059044555240, guid: 61f1e8ad0328bd9a69bf5bb5e156e785, type: 3}
@@ -2593,6 +2598,8 @@ MonoBehaviour:
     prefab: {fileID: 7353316231763634684, guid: 78c6f6afdd7e2438da55c6cd23ea463a, type: 3}
   - poolSize: 5
     prefab: {fileID: 4688439844125108287, guid: 6db90daa8e1b54716a7c90db9d42802c, type: 3}
+  - poolSize: 5
+    prefab: {fileID: 7353316231763634684, guid: a332827cb07a140eda291d5948f34d3a, type: 3}
   objectPoolTransform: {fileID: 1127708884}
 --- !u!4 &1127708884
 Transform:
@@ -3123,7 +3130,7 @@ Transform:
   m_GameObject: {fileID: 1300379210}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -8.51, y: 2.13, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

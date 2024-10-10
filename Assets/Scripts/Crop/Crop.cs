@@ -102,6 +102,15 @@ public class Crop : MonoBehaviour
             GetComponentInChildren<SpriteRenderer>().enabled = false;
         }
 
+        if (cropDetails.disableCropCollidersBeforeHarvestedAnimation)
+        {
+            Collider2D[] collider2Ds = GetComponentsInChildren<Collider2D>();
+            foreach (Collider2D collider2D in collider2Ds)
+            {
+                collider2D.enabled = false;
+            }
+        }
+
         StartCoroutine(ProcessHarvestActionsAfterAnimation(gridPropertyDetails, cropDetails, runningAnimation, animator));
     }
 
