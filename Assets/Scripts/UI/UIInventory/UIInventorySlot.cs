@@ -14,7 +14,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private Transform parentItem;
 
-    private GameObject draggedItem;
+    public GameObject draggedItem;
 
     public Image inventorySlotHightlight;
     public Image inventorySlotImage;
@@ -27,6 +27,8 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     [SerializeField] private GameObject itemPrefab = null;
     [HideInInspector] public int itemQuantity;
     [SerializeField] private int slotNumber = 0;
+
+    public bool enableDragAndDescription = false;
 
     private void Awake()
     {
@@ -110,6 +112,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!enableDragAndDescription) return;
         if (itemDetails != null)
         {
             PlayerController.Instance.PlayerMovement.DisablePlayerInputAndResetMovement();
@@ -125,6 +128,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!enableDragAndDescription) return;
         if (draggedItem != null)
         {
             draggedItem.transform.position = Input.mousePosition;
@@ -134,6 +138,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     // Destroy the dragged item placeholder
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!enableDragAndDescription) return;
         if (draggedItem != null)
         {
             Destroy(draggedItem);
@@ -164,6 +169,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     // Show item details when the pointer enters the slot
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!enableDragAndDescription) return;
         if (itemQuantity != 0)
         {
             // Instantiate the inventory text box
@@ -193,6 +199,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!enableDragAndDescription) return;
         DestroyInventoryTextBox();
     }
 

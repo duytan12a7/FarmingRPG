@@ -135,4 +135,25 @@ public class UIInventoryBar : MonoBehaviour
         }
     }
 
+    public void DestroyCurrentlyDraggedItems()
+    {
+        foreach (UIInventorySlot inventorySlot in inventorySlots)
+        {
+            if (inventorySlot.draggedItem != null)
+            {
+                Destroy(inventorySlot.draggedItem);
+            }
+        }
+    }
+
+    public void ClearCurrentlySelectedItems()
+    {
+        foreach (UIInventorySlot inventorySlot in inventorySlots)
+        {
+            if (inventorySlot.draggedItem != null)
+            {
+                inventorySlot.ClearSelectedItem();
+            }
+        }
+    }
 }
