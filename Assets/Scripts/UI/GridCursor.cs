@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -194,8 +195,10 @@ public class GridCursor : MonoBehaviour
                 if (cropDetails == null)
                     return false;
 
-                return gridPropertyDetails.growthDays >= cropDetails.totalGrowthDays &&
-                       cropDetails.CanUseToolHarvestCrop(itemDetails.itemCode);
+                if (gridPropertyDetails.growthDays < cropDetails.growthDays.Last())
+                    return false;
+
+                return cropDetails.CanUseToolHarvestCrop(itemDetails.itemCode);
 
             default:
                 return false;

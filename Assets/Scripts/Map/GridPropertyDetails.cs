@@ -21,6 +21,11 @@ public class GridPropertyDetails
     {
 
     }
+    public GridPropertyDetails(int gridX, int gridY)
+    {
+        this.gridX = gridX;
+        this.gridY = gridY;
+    }
 
     public void ClearCropData()
     {
@@ -29,4 +34,8 @@ public class GridPropertyDetails
         daysSinceLastHarvest = -1;
         daysSinceWatered = -1;
     }
+
+    public string Key() => GridPropertyDetails.Key(gridX, gridY);
+
+    public static string Key(int gridX, int gridY) => $"x{gridX}y{gridY}";
 }
