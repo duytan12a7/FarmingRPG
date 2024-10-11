@@ -51,7 +51,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         HighlightButtonForSelectedTab();
     }
 
-    private void DisablePauseMenu()
+    public void DisablePauseMenu()
     {
         pauseMenuInventoryManagement.DestroyCurrentlyDraggedItems();
 
@@ -98,5 +98,11 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             else menuTabs[i].SetActive(true);
         }
         HighlightButtonForSelectedTab();
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Quit Game!!!");
+        Application.Quit();
     }
 }

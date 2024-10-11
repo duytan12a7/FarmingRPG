@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(GenerateGUID))]
 public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManager>, ISaveable
@@ -406,4 +407,21 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     }
 
     public CropDetails GetCropDetails(int seedItemCode) => sO_CropDetailsList.GetCropDetails(seedItemCode);
+
+    public GameObjectSave ISaveData()
+    {
+        IStoreSceneData(SceneManager.GetActiveScene().name);
+        return GameObjectSave;
+    }
+
+    public void ILoadData(GameSave gameSave)
+    {
+        if (gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
+        {
+            GameObjectSave = gameObjectSave;
+
+            // Restore data for current scene
+            IRestoreSceneData(SceneManager.GetActiveScene().name);
+        }
+    }
 }

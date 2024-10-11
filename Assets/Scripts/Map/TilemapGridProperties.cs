@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 [ExecuteAlways]
 public class TilemapGridProperties : MonoBehaviour
 {
+#if UNITY_EDITOR
     private Tilemap tilemap;
 
     [SerializeField] private SO_GridProperties sO_GridProperties;
@@ -66,4 +67,5 @@ public class TilemapGridProperties : MonoBehaviour
             Debug.Log("DISABLE PROPERTY TILEMAPS");
         }
     }
+#endif
 }

@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 539941954638054604}
   - component: {fileID: 6521851368429468773}
   - component: {fileID: 8916080842570067400}
-  - component: {fileID: 6981035513144298888}
+  - component: {fileID: 9085740401609362889}
   m_Layer: 0
   m_Name: CropTreeBlueSpruce
   m_TagString: Untagged
@@ -367,7 +367,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6981035513144298888
+--- !u!114 &9085740401609362889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

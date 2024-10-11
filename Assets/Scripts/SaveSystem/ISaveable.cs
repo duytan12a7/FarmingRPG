@@ -11,4 +11,7 @@ public interface ISaveable
     void IStoreSceneData(string sceneName);
 
     void IRestoreSceneData(string sceneName);
+
+    GameObjectSave ISaveData();
+    void ILoadData(GameSave gameSave);
 }
