@@ -9,7 +9,7 @@ public class CropDetails
     [ItemCodeDescription]
     public int seedItemCode;
     public int[] growthDays;
-    public int totalGrowthDays => growthDays.Sum();
+    public int totalGrowthDays;
     public GameObject[] growthPrefab;
     public Sprite[] growthSprites;
     public Season[] seasons;
@@ -63,14 +63,14 @@ public class CropDetails
 
     public int GetGrowthStageForDays(int days)
     {
-        int daysCounter = totalGrowthDays;
+        // int daysCounter = totalGrowthDays;
         for (int x = growthDays.Length - 1; x >= 0; x--)
         {
-            if (days >= daysCounter)
+            if (days >= growthDays[x])
             {
                 return x;
             }
-            daysCounter -= growthDays[x];
+            // daysCounter -= growthDays[x];
         }
 
         throw new Exception($"Unexpected error calculating growth stage for days '{days}'");

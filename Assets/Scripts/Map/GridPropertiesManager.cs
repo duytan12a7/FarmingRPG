@@ -21,6 +21,8 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
     public string ISaveableUniqueID { get; set; }
     public GameObjectSave GameObjectSave { get; set; }
 
+    private bool isFirstTimeSceneLoaded = true;
+
     protected override void Awake()
     {
         base.Awake();
@@ -93,12 +95,14 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
                 SetGridPropertyDetails(gridProperty.gridCoordinate.x, gridProperty.gridCoordinate.y, gridPropertyDetails, gridPropertyDictionary);
             }
 
-            var sceneSave = new SceneSave { gridPropertyDetailsDictionary = gridPropertyDictionary };
+            SceneSave sceneSave = new() { gridPropertyDetailsDictionary = gridPropertyDictionary };
 
             if (so_GridProperties.sceneName.ToString() == SceneControllerManager.Instance.startingSceneName.ToString())
             {
-                this.gridProperties = gridPropertyDictionary;
+                gridProperties = gridPropertyDictionary;
             }
+
+            sceneSave.boolDictionary = new Dictionary<string, bool> { { nameof(isFirstTimeSceneLoaded), true } };
 
             GameObjectSave.sceneData[so_GridProperties.sceneName.ToString()] = sceneSave;
         }
@@ -116,28 +120,47 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void IRestoreSceneData(string sceneName)
     {
-        if (GameObjectSave.sceneData.TryGetValue(sceneName, out var sceneSave))
+        if (GameObjectSave.sceneData.TryGetValue(sceneName, out SceneSave sceneSave))
         {
             gridProperties = sceneSave.gridPropertyDetailsDictionary;
         }
+
+        if (sceneSave.boolDictionary != null && sceneSave.boolDictionary.TryGetValue(nameof(isFirstTimeSceneLoaded), out bool storedIsFirstTimeSceneLoaded))
+        {
+            isFirstTimeSceneLoaded = storedIsFirstTimeSceneLoaded;
+        }
+
+        if (isFirstTimeSceneLoaded)
+            EventHandler.CallInstantiateCropPrefabEvent();
 
         if (gridProperties.Count > 0)
         {
             ClearDisplayGridPropertyDetails();
             DisplayGridPropertyDetails();
         }
+
+        if (isFirstTimeSceneLoaded) isFirstTimeSceneLoaded = false;
     }
 
     public void IStoreSceneData(string sceneName)
     {
-        GameObjectSave.sceneData[sceneName] = new SceneSave { gridPropertyDetailsDictionary = gridProperties };
+        GameObjectSave.sceneData.Remove(sceneName);
+
+        var sceneSave = new SceneSave(gridProperties)
+        {
+            boolDictionary = new Dictionary<string, bool> { { nameof(isFirstTimeSceneLoaded), isFirstTimeSceneLoaded } }
+        };
+
+        GameObjectSave.sceneData.Add(sceneName, sceneSave);
     }
 
     public GridPropertyDetails GetGridPropertyDetails(int gridX, int gridY, Dictionary<string, GridPropertyDetails> gridPropertyDictionary)
     {
-        var key = $"x{gridX}y{gridY}";
-        gridPropertyDictionary.TryGetValue(key, out GridPropertyDetails gridPropertyDetails);
-        return gridPropertyDetails;
+        if (gridPropertyDictionary.TryGetValue(GridPropertyDetails.Key(gridX, gridY), out var gridPropertyDetails))
+        {
+            return gridPropertyDetails;
+        }
+        return null;
     }
 
     public GridPropertyDetails GetGridPropertyDetails(int gridX, int gridY)
@@ -152,10 +175,10 @@ public class GridPropertiesManager : SingletonMonobehaviour<GridPropertiesManage
 
     public void SetGridPropertyDetails(int gridX, int gridY, GridPropertyDetails gridPropertyDetails, Dictionary<string, GridPropertyDetails> gridPropertyDictionary)
     {
-        var key = $"x{gridX}y{gridY}";
         gridPropertyDetails.gridX = gridX;
         gridPropertyDetails.gridY = gridY;
-        gridPropertyDictionary[key] = gridPropertyDetails;
+
+        gridPropertyDictionary[gridPropertyDetails.Key()] = gridPropertyDetails;
     }
 
     public void SetGridPropertyDetails(int gridX, int gridY, GridPropertyDetails gridPropertyDetails)

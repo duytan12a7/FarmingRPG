@@ -42,6 +42,14 @@ public static class EventHandler
         InventoryUpdatedEvent?.Invoke(inventoryLocation, inventoryList);
     }
 
+    // Instantiate Crop Prefabs
+    public static event Action InstantiateCropPrefabEvent;
+
+    public static void CallInstantiateCropPrefabEvent()
+    {
+        InstantiateCropPrefabEvent?.Invoke();
+    }
+
     // Movement Event
     public static event MovementDelegate MovementEvent;
 
