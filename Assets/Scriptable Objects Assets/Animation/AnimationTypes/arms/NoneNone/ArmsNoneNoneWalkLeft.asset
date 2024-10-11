@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationClip: {fileID: 7400000, guid: bf79bd63a25ff134cb6d7e4e2f193ea1, type: 2}
   animationName: 7
-  partAnimator: 1
+  partAnimator: 2
   variantColour: 0
   variantType: 0

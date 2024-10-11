@@ -242,23 +242,50 @@ public class PlayerAnimation : MonoBehaviour
 
     public void CollectInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
     {
-        StartCoroutine(CollectInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection));
+        StartCoroutine(UseToolInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection, PartVariantType.none, CharacterPartAnimator.none, pickAnimationPause, afterPickAnimationPause));
     }
 
-    private IEnumerator CollectInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    public void ChopInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
     {
+        StartCoroutine(UseToolInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection, PartVariantType.axe, CharacterPartAnimator.tool, useToolAnimationPause, afterUseToolAnimationPause));
+    }
+
+    public void BreakInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
+    {
+        StartCoroutine(UseToolInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection, PartVariantType.pickaxe, CharacterPartAnimator.tool, pickAnimationPause, afterPickAnimationPause));
+    }
+
+    private IEnumerator UseToolInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection, PartVariantType toolType, CharacterPartAnimator partAnimator, WaitForSeconds animationPause, WaitForSeconds afterAnimationPause)
+    {
+        // Disable player movement and tool use during the action
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
         PlayerToolUseDisabled = true;
 
+        // If the toolType and animation parameters are provided, apply them
+        if (toolType != PartVariantType.none && partAnimator != CharacterPartAnimator.none)
+        {
+            // Set up the character tool attributes for the animation
+            toolCharacterAttribute.variantType = toolType;
+            toolCharacterAttribute.partAnimator = partAnimator;
+            characterAttributes.Clear();
+            characterAttributes.Add(toolCharacterAttribute);
+            animationOverrides.ApplyCharacterCustomisation(characterAttributes);
+        }
+
+        // Process the crop using the equipped item in the specified player direction
         ProcessCropWithEquippedItemInPlayerDirection(playerDirection, itemDetails, gridPropertyDetails);
 
-        yield return pickAnimationPause;
+        // Wait for the tool-use animation to complete
+        yield return animationPause;
 
-        yield return afterPickAnimationPause;
+        // Wait for any additional animation pause (like after using the tool)
+        yield return afterAnimationPause;
 
+        // Re-enable player movement and tool use after the action is complete
         playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
         PlayerToolUseDisabled = false;
     }
+
 
     private void ProcessCropWithEquippedItemInPlayerDirection(Vector3Int playerDirection, ItemDetails itemDetails, GridPropertyDetails gridPropertyDetails)
     {
@@ -268,41 +295,15 @@ public class PlayerAnimation : MonoBehaviour
         switch (itemDetails.itemType)
         {
             case ItemType.Chopping_tool:
+            case ItemType.Breaking_tool:
                 SetToolFlags(playerDirection, ToolAction.usingTool);
                 crop.ProcessToolAction(itemDetails, isUsingToolRight, isUsingToolLeft, isUsingToolUp, isUsingToolDown);
                 break;
-
             case ItemType.Collecting_tool:
                 SetToolFlags(playerDirection, ToolAction.pickingTool);
                 crop.ProcessToolAction(itemDetails, isPickingRight, isPickingLeft, isPickingUp, isPickingDown);
                 break;
         }
-    }
-
-    public void ChopInPlayerDirection(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
-    {
-        StartCoroutine(ChopInPlayerDirectionRoutine(gridPropertyDetails, itemDetails, playerDirection));
-    }
-
-    private IEnumerator ChopInPlayerDirectionRoutine(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
-    {
-        playerCtrl.PlayerMovement.PlayerInputIsDisabled = true;
-        PlayerToolUseDisabled = true;
-
-        toolCharacterAttribute.variantType = PartVariantType.axe;
-        toolCharacterAttribute.partAnimator = CharacterPartAnimator.tool;
-        characterAttributes.Clear();
-        characterAttributes.Add(toolCharacterAttribute);
-        animationOverrides.ApplyCharacterCustomisation(characterAttributes);
-
-        ProcessCropWithEquippedItemInPlayerDirection(playerDirection, itemDetails, gridPropertyDetails);
-
-        yield return useToolAnimationPause;
-
-        yield return afterUseToolAnimationPause;
-
-        playerCtrl.PlayerMovement.PlayerInputIsDisabled = false;
-        PlayerToolUseDisabled = false;
     }
 
     private void SetToolFlags(Vector3Int playerDirection, ToolAction toolAction)

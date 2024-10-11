@@ -39,6 +39,7 @@ public enum AnimationName
 
 public enum CharacterPartAnimator
 {
+    none,
     body,
     arms,
     hair,
