@@ -1490,6 +1490,7 @@ GameObject:
   - component: {fileID: 2366587429284683765}
   - component: {fileID: 2366587429284683764}
   - component: {fileID: 191326304}
+  - component: {fileID: 2366587429284683767}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -13266,6 +13267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1962899664}
   - component: {fileID: 1962899663}
+  - component: {fileID: 1962899665}
   m_Layer: 0
   m_Name: InventoryManager
   m_TagString: Untagged
@@ -13287,6 +13289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryListCapacityIntArray: 
   itemListSO: {fileID: 11400000, guid: ae62d33e290b049f6b4af5cf8dc70713, type: 2}
+  uIInventoryBar: {fileID: 1638682188}
 --- !u!4 &1962899664
 Transform:
   m_ObjectHideFlags: 0
@@ -13302,6 +13305,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1962899665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962899662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf558903f0ea4ab3a7d2ecde9e7295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gUID: 26276d58-a903-4ea3-bcaa-8578d4a0056e
 --- !u!1 &1979908017
 GameObject:
   m_ObjectHideFlags: 0
@@ -14941,6 +14957,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDirection: 0
+--- !u!114 &2366587429284683767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 191326297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cf558903f0ea4ab3a7d2ecde9e7295c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gUID: c3d52449-a52f-4d2e-8404-caccde4a4884
 --- !u!1001 &3435789656659863894
 PrefabInstance:
   m_ObjectHideFlags: 0
